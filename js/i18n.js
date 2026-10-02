@@ -83,7 +83,7 @@ export const TRANSLATIONS = {
     // Footer
     footerTitle: "CCPriceConverter • Browser Cryptocurrency Rate Calculator",
     footerProxyText: "Run local proxy for CoinMarketCap: `npm start` or `python3 server.py` | See ",
-    footerInstructionsLink: "Instructions (RU)"
+    footerInstructionsLink: "Instructions"
   },
 
   ru: {

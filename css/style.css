@@ -1058,3 +1058,101 @@ body {
   }
 }
 
+/* ==========================================================================
+   Documentation Page Styles (instructions.html)
+   ========================================================================== */
+.doc-code-block {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-main);
+  overflow-x: auto;
+  margin: 0.6rem 0 1rem 0;
+  line-height: 1.6;
+}
+
+[data-theme="light"] .doc-code-block {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+.doc-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.doc-step-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: rgba(13, 18, 31, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+}
+
+[data-theme="light"] .doc-step-item {
+  background: rgba(248, 250, 252, 0.8);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.doc-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.doc-step-content {
+  flex: 1;
+}
+
+.doc-step-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+  color: var(--text-main);
+}
+
+.raw-links-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.raw-file-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  transition: var(--transition-smooth);
+}
+
+.raw-file-badge:hover {
+  border-color: var(--primary-accent);
+  color: #818cf8;
+  transform: translateY(-1px);
+}
+
+

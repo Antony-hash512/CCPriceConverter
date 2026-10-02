@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Guide & Documentation | CCPriceConverter</title>
+  <meta name="description" content="Detailed guide on running, configuring, and using the CCPriceConverter cryptocurrency calculator">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Controls Bar -->
+    <aside class="top-controls-bar" id="top-controls-bar" aria-label="Page navigation and preferences">
+      <!-- Back to Calculator -->
+      <a href="index.html" class="ctrl-btn" style="text-decoration: none;">
+        <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span class="lang-content" data-content-lang="en">Calculator</span>
+        <span class="lang-content" data-content-lang="ru" style="display: none;">Калькулятор</span>
+      </a>
+
+      <!-- Right Controls: Language & Theme -->
+      <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+        <!-- Language Switcher: No flags -->
+        <div class="controls-group" id="lang-switch-group" role="group" aria-label="Language selection">
+          <button type="button" class="ctrl-btn lang-btn active" data-lang="en" id="btn-lang-en" aria-pressed="true">
+            <span>English</span>
+          </button>
+          <button type="button" class="ctrl-btn lang-btn" data-lang="ru" id="btn-lang-ru" aria-pressed="false">
+            <span>Русский</span>
+          </button>
+        </div>
+
+        <!-- Theme Switcher: Light, Dark, System -->
+        <div class="controls-group" id="theme-switch-group" role="group" aria-label="Theme selection">
+          <button type="button" class="ctrl-btn theme-btn" data-theme="light" id="btn-theme-light" title="Light theme">
+            <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span class="theme-label">Light</span>
+          </button>
+          <button type="button" class="ctrl-btn theme-btn active" data-theme="dark" id="btn-theme-dark" title="Dark theme">
+            <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="theme-label">Dark</span>
+          </button>
+          <button type="button" class="ctrl-btn theme-btn" data-theme="system" id="btn-theme-system" title="System theme">
+            <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span class="theme-label">System</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <span class="pulse-dot"></span>
+        <span class="lang-content" data-content-lang="en">User Manual & Deployment Guide</span>
+        <span class="lang-content" data-content-lang="ru" style="display: none;">Руководство пользователя и запуск</span>
+      </div>
+      <h1 class="app-title">
+        <span class="lang-content" data-content-lang="en">Instructions & Documentation</span>
+        <span class="lang-content" data-content-lang="ru" style="display: none;">Инструкция и документация</span>
+      </h1>
+      <p class="app-subtitle">
+        <span class="lang-content" data-content-lang="en">
+          Complete guide on running the local proxy, overcoming CORS restrictions, and using the calculator features.
+        </span>
+        <span class="lang-content" data-content-lang="ru" style="display: none;">
+          Полное руководство по запуску локального прокси, обходу ограничений CORS и работе со всеми функциями калькулятора.
+        </span>
+      </p>
+    </header>
+
+    <!-- ====================================================================
+         ENGLISH CONTENT BLOCK
+         ==================================================================== -->
+    <div class="lang-content" data-content-lang="en">
+      
+      <!-- Section 1: Overview -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>ℹ️</span> About the Project
+          </h2>
+          <span class="section-badge">Overview</span>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          <strong>CCPriceConverter</strong> is a browser-based cryptocurrency exchange rate and volume calculator that queries live APIs from 4 providers:
+        </p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0.5rem;">
+          <li>🦙 <strong>DefiLlama</strong>: Works directly in browser, no API key required.</li>
+          <li>🔵 <strong>CoinMarketCap</strong>: Requires an API key and the local proxy due to CORS restrictions.</li>
+          <li>🦎 <strong>CoinGecko</strong>: Direct browser calls, optional Demo/Pro API key.</li>
+          <li>🌶️ <strong>CoinPaprika</strong>: Direct browser calls, optional Pro API key.</li>
+        </ul>
+      </section>
+
+      <!-- Section 2: CORS & Mini-Server -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🛡️</span> Why is a Local Mini-Server Needed for CoinMarketCap?
+          </h2>
+          <span class="section-badge">CORS Proxy</span>
+        </div>
+        <p style="color: var(--text-muted); line-height: 1.6;">
+          <strong>CoinMarketCap</strong> intentionally prevents client-side browsers from making direct API calls (missing <code>Access-Control-Allow-Origin</code> headers) to prevent private API keys from being leaked in public frontends. Direct <code>fetch()</code> calls from a browser will always be blocked with a CORS error.
+        </p>
+        <p style="color: var(--text-muted); line-height: 1.6; margin-top: 0.75rem;">
+          To resolve this without complex infrastructure, the repository includes a zero-dependency mini-server (available in both <strong>Node.js</strong> and <strong>Python 3</strong>) that serves the static assets and acts as a reverse CORS proxy for <code>/api/cmc/*</code>.
+        </p>
+      </section>
+
+      <!-- Section 3: Launch Options -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🚀</span> Launch Options
+          </h2>
+          <span class="section-badge">Quick Start</span>
+        </div>
+
+        <h3 style="font-size: 1rem; margin-top: 0.5rem; color: #a5b4fc;">Option 1: Run via Node.js (Recommended)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Requires Node.js 18+. No npm packages need to be installed.</p>
+        <pre class="doc-code-block">cd /home/mega/git/CCPriceConverter
+npm start
+# or: node server.js</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Option 2: Run via Python 3</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Uses the standard Python library (no pip packages needed).</p>
+        <pre class="doc-code-block">cd /home/mega/git/CCPriceConverter
+python3 server.py</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Option 3: Custom Port</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Specify a port via the <code>PORT</code> environment variable:</p>
+        <pre class="doc-code-block">PORT=8080 node server.js
+# or: PORT=8080 python3 server.py</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Option 4: Standalone Run (Pure Static HTML)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">
+          Open <code>index.html</code> directly via <code>file:///</code> or any static server. DefiLlama, CoinGecko, and CoinPaprika will work via public CORS, while CoinMarketCap will display an informative hint to start the local proxy.
+        </p>
+      </section>
+
+      <!-- Section 4: Interface Guide -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>⚙️</span> Using the Interface
+          </h2>
+          <span class="section-badge">Step-by-Step</span>
+        </div>
+
+        <div class="doc-step-list">
+          <div class="doc-step-item">
+            <div class="doc-step-num">1</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Select Providers</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                DefiLlama is selected by default. You can enable 1 to 4 providers. If only one provider is selected, it cannot be unchecked. Entering API keys for paid providers persists automatically in <code>localStorage</code> even when toggled off.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">2</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Enter Trade Parameters</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                In the <strong>Sell</strong> and <strong>Buy</strong> columns, pick your desired cryptocurrencies (BTC, ETH, BCH, ZEC, XMR, XRP) and specify the quantities.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">3</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Click "Calculate"</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Requests are sent strictly upon clicking this button. The button locks for 3 seconds with the label <em>"Sent"</em> and a cooldown bar to prevent accidental re-triggers.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">4</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Analyze Results</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Each active provider shows 1-unit rates, total sell/buy volume in USD, and volume difference with color coding:
+                <strong style="color: var(--color-danger);">Loss > $20 (Red)</strong>, 
+                <strong style="color: var(--color-warning);">Loss $0-$20 (Yellow)</strong>, and 
+                <strong style="color: var(--color-success);">Profit (Green with red WTF? badge)</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">5</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Language & Theme Customization</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Use the top preferences bar to switch between English and Russian instantly without losing calculated data, or choose Light, Dark, or System theme.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Raw Files -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>📄</span> Raw Markdown Documents
+          </h2>
+          <span class="section-badge">Files</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          You can also view the raw Markdown files directly in any editor:
+        </p>
+        <div class="raw-links-group">
+          <a href="INSTRUCTIONS-en.md" target="_blank" class="raw-file-badge">
+            📘 INSTRUCTIONS-en.md (English)
+          </a>
+          <a href="INSTRUCTIONS.md" target="_blank" class="raw-file-badge">
+            📙 INSTRUCTIONS.md (Russian)
+          </a>
+          <a href="README.md" target="_blank" class="raw-file-badge">
+            📗 README.md (Bilingual)
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ====================================================================
+         RUSSIAN CONTENT BLOCK
+         ==================================================================== -->
+    <div class="lang-content" data-content-lang="ru" style="display: none;">
+      
+      <!-- Section 1: О проекте -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>ℹ️</span> О проекте
+          </h2>
+          <span class="section-badge">Обзор</span>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          <strong>CCPriceConverter</strong> — веб-калькулятор криптовалютных курсов и объёмов обмена, собирающий котировки от 4 провайдеров в реальном времени:
+        </p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0.5rem;">
+          <li>🦙 <strong>DefiLlama</strong>: Работает напрямую из браузера без ключей (включён по умолчанию).</li>
+          <li>🔵 <strong>CoinMarketCap</strong>: Требует API-ключ и локальный прокси из-за ограничений CORS.</li>
+          <li>🦎 <strong>CoinGecko</strong>: Работает напрямую, опционален Demo/Pro API-ключ.</li>
+          <li>🌶️ <strong>CoinPaprika</strong>: Работает напрямую, опционален Pro API-ключ.</li>
+        </ul>
+      </section>
+
+      <!-- Section 2: CORS & Mini-Server -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🛡️</span> Почему нужен локальный мини-сервер для CoinMarketCap?
+          </h2>
+          <span class="section-badge">CORS Прокси</span>
+        </div>
+        <p style="color: var(--text-muted); line-height: 1.6;">
+          Платформа <strong>CoinMarketCap</strong> сознательно блокирует прямые браузерные запросы (отсутствуют CORS-заголовки <code>Access-Control-Allow-Origin</code>), защищая приватные ключи пользователей от утечки на клиенте. Прямой вызов <code>fetch()</code> из браузера на <code>pro-api.coinmarketcap.com</code> блокируется браузером с ошибкой CORS.
+        </p>
+        <p style="color: var(--text-muted); line-height: 1.6; margin-top: 0.75rem;">
+          Для решения этой проблемы в проект включен сверхлегкий локальный сервер (доступны версии как на <strong>Node.js</strong>, так и на <strong>Python 3</strong> без внешних зависимостей). Сервер раздаёт статику и прозрачно проксирует запросы к <code>/api/cmc/*</code>.
+        </p>
+      </section>
+
+      <!-- Section 3: Варианты запуска -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🚀</span> Варианты запуска
+          </h2>
+          <span class="section-badge">Быстрый старт</span>
+        </div>
+
+        <h3 style="font-size: 1rem; margin-top: 0.5rem; color: #a5b4fc;">Вариант 1: Запуск через Node.js (Рекомендуемый)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Требуется Node.js 18+. Внешние пакеты устанавливать не требуется.</p>
+        <pre class="doc-code-block">cd /home/mega/git/CCPriceConverter
+npm start
+# либо: node server.js</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Вариант 2: Запуск через Python 3</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Используется стандартная библиотека Python 3 (без pip install).</p>
+        <pre class="doc-code-block">cd /home/mega/git/CCPriceConverter
+python3 server.py</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Вариант 3: Запуск на произвольном порту</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">Укажите переменную окружения <code>PORT</code>:</p>
+        <pre class="doc-code-block">PORT=8080 node server.js
+# или: PORT=8080 python3 server.py</pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1rem; color: #a5b4fc;">Вариант 4: Автономный запуск (Pure Static HTML)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">
+          Вы можете открыть <code>index.html</code> напрямую через <code>file:///</code> или любой статический сервер. DefiLlama, CoinGecko и CoinPaprika будут работать через публичный CORS.
+        </p>
+      </section>
+
+      <!-- Section 4: Использование интерфейса -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>⚙️</span> Использование интерфейса
+          </h2>
+          <span class="section-badge">Пошагово</span>
+        </div>
+
+        <div class="doc-step-list">
+          <div class="doc-step-item">
+            <div class="doc-step-num">1</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Выбор провайдеров</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                По умолчанию активна только DefiLlama. Можно выбрать от 1 до 4 чекбоксов. Если активен только 1 чекбокс, он блокируется от снятия. При скрытии полей API-ключей введённые данные не стираются и сохраняются в <code>localStorage</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">2</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Ввод параметров сделки</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                В столбцах <strong>Продажа</strong> и <strong>Покупка</strong> укажите криптовалюты (BTC, ETH, BCH, ZEC, XMR, XRP) и желаемые объёмы.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">3</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Нажатие «Посчитать»</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Запросы отправляются исключительно по клику на кнопку. Кнопка блокируется на 3 секунды со статусом <em>«Отправлено»</em> для предотвращения случайных повторных запросов.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">4</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Анализ результатов</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Для каждого активного провайдера выводятся курсы за 1 ед., суммарные стоимости в USD и разница с цветовой градацией:
+                <strong style="color: var(--color-danger);">Потери > $20 (Красный)</strong>, 
+                <strong style="color: var(--color-warning);">Потери $0-$20 (Жёлтый)</strong>, 
+                <strong style="color: var(--color-success);">Профит (Зелёный с красным WTF?)</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">5</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Настройка языка и темы</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                В самом верху страницы можно мгновенно переключать язык (English / Русский) и тему оформления (Light, Dark, System) с моментальным обновлением всех карточек.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Исходные Markdown файлы -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>📄</span> Исходные Markdown-файлы
+          </h2>
+          <span class="section-badge">Файлы</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Вы также можете просмотреть сырой текст документации в Markdown:
+        </p>
+        <div class="raw-links-group">
+          <a href="INSTRUCTIONS.md" target="_blank" class="raw-file-badge">
+            📙 INSTRUCTIONS.md (Русский)
+          </a>
+          <a href="INSTRUCTIONS-en.md" target="_blank" class="raw-file-badge">
+            📘 INSTRUCTIONS-en.md (English)
+          </a>
+          <a href="README.md" target="_blank" class="raw-file-badge">
+            📗 README.md (Двуязычный)
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div>CCPriceConverter • Browser Cryptocurrency Rate Calculator</div>
+      <div>
+        <a href="index.html" class="footer-link">← Return to Calculator</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/instructions.js"></script>
+</body>
+</html>
