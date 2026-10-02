@@ -111,4 +111,4 @@ You can also open `index.html` directly in your browser (via `file:///` or any s
 6. **API Key Privacy & Storage Controls**:
    - **"Do not save keys" Checkbox**: Preventive security mode for shared or foreign computers. When checked, entered API keys remain strictly in runtime memory and are not written to `localStorage`. A crossed-out floppy disk icon is displayed next to inputs.
    - **"Clear keys" Button**: Immediately wipes all saved API keys from browser `localStorage` and clears current input fields.
-   - **Interactive Modal on Uncheck**: If you uncheck "Do not save keys" when keys are already stored in `localStorage`, a modal dialog appears offering options to **"Clear"** or **"Keep"** the stored keys.
+   - **Interactive Modal on Activation**: When you check (activate) "Do not save keys" while keys are already stored in `localStorage`, a modal dialog appears offering options to **"Clear"** or **"Keep"** the stored keys.

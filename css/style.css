@@ -206,9 +206,45 @@ body {
   flex-shrink: 0;
 }
 
-.clear-keys-btn:hover {
+.clear-keys-btn {
   color: #f87171;
   background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.clear-keys-btn .ctrl-icon {
+  stroke: #f87171;
+}
+
+.clear-keys-btn:hover {
+  color: #ffffff;
+  background: #ef4444;
+  border-color: #ef4444;
+  box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4);
+}
+
+.clear-keys-btn:hover .ctrl-icon {
+  stroke: #ffffff;
+}
+
+[data-theme="light"] .clear-keys-btn {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="light"] .clear-keys-btn .ctrl-icon {
+  stroke: #dc2626;
+}
+
+[data-theme="light"] .clear-keys-btn:hover {
+  color: #ffffff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+[data-theme="light"] .clear-keys-btn:hover .ctrl-icon {
+  stroke: #ffffff;
 }
 
 .custom-checkbox.mini,

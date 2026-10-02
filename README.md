@@ -42,7 +42,7 @@
     - **"Do not save keys" Checkbox**: Preventive non-saving mode designed for shared or foreign computers. When checked, entered API keys remain strictly in runtime memory and are never written to `localStorage`.
     - **"Clear keys" Button**: Immediately wipes all saved API keys from browser `localStorage` and clears active input fields.
     - **Visual Status Indicators**: Left of each API key input, displays a floppy disk (`💾`) icon when the key is saved in `localStorage`, or a crossed-out floppy disk icon when saving is blocked by the preventive checkbox.
-    - **Safe Uncheck Confirmation**: If unchecking "Do not save keys" while keys are already stored in `localStorage`, an interactive modal dialog prompts the user to either **"Clear"** or **"Keep"** the stored keys.
+    - **Safe Activation Confirmation**: When checking "Do not save keys", if keys are already stored in `localStorage`, an interactive modal dialog prompts the user to either **"Clear"** or **"Keep"** the stored keys.
 
 ---
 
@@ -166,7 +166,7 @@ CCPriceConverter/
     - **Чекбокс «Не сохранять ключи»**: превентивный режим безопасности для работы на чужом или общем компьютере. При установленном чекбоксе введённые API-ключи хранятся исключительно в оперативной памяти сессии и не записываются в `localStorage`.
     - **Кнопка «Стереть ключи»**: мгновенно стирает все сохранённые ключи из `localStorage` браузера и очищает поля ввода.
     - **Индикаторы сохранения ключа**: слева от каждого поля ввода API-ключа отображается иконка дискеты (`💾`), если ключ сохранён в `localStorage`, либо перечёркнутая дискета, если сохранение заблокировано превентивным чекбоксом.
-    - **Защита при снятии чекбокса**: если пользователь снимает отметку «Не сохранять», а в `localStorage` уже обнаружены ранее сохранённые ключи, открывается модальное окно с вариантами **«Очистить»** или **«Оставить»**.
+    - **Защита при активации чекбокса**: при включении отметки «Не сохранять», если в `localStorage` уже обнаружены ранее сохранённые ключи, открывается модальное окно с выбором **«Очистить»** или **«Оставить»**.
 
 ---
 

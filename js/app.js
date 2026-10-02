@@ -116,29 +116,29 @@ function initStorageControls() {
     checkboxDontSave.checked = isDontSaveEnabled;
     checkboxDontSave.addEventListener('change', () => {
       if (checkboxDontSave.checked) {
-        // Включение режима: не сохранять
-        isDontSaveEnabled = true;
-        localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'true');
-        updateKeyStatusIndicators();
-      } else {
-        // Снятие чекбокса: проверяем, сохранены ли уже ключи в localStorage
+        // Включение режима: проверяем, сохранены ли уже ключи в localStorage
         const hasSavedKeys = API_KEY_PROVIDERS.some(p => Boolean(localStorage.getItem(`${STORAGE_KEYS_PREFIX}${p}`)));
         if (hasSavedKeys) {
-          // Временно возвращаем отметку и показываем всплывающее окно
-          checkboxDontSave.checked = true;
+          // Временно оставляем чекбокс неотмеченным, пока пользователь не сделает выбор
+          checkboxDontSave.checked = false;
           openClearKeysModal();
         } else {
-          // Ключей в localStorage нет — просто отключаем режим
-          isDontSaveEnabled = false;
-          localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
-          // Если пользователь уже ввёл ключи в этой сессии, сохраняем их
-          API_KEY_PROVIDERS.forEach(p => {
-            if (apiKeysCache[p]) {
-              localStorage.setItem(`${STORAGE_KEYS_PREFIX}${p}`, apiKeysCache[p]);
-            }
-          });
+          // Ключей в localStorage нет — сразу включаем режим
+          isDontSaveEnabled = true;
+          localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'true');
           updateKeyStatusIndicators();
         }
+      } else {
+        // Снятие чекбокса: отключаем режим "Не сохранять", разрешая сохранение
+        isDontSaveEnabled = false;
+        localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+        // Если пользователь уже ввёл ключи в этой сессии, теперь сохраняем их в localStorage
+        API_KEY_PROVIDERS.forEach(p => {
+          if (apiKeysCache[p]) {
+            localStorage.setItem(`${STORAGE_KEYS_PREFIX}${p}`, apiKeysCache[p]);
+          }
+        });
+        updateKeyStatusIndicators();
       }
     });
   }
@@ -147,9 +147,9 @@ function initStorageControls() {
   if (modalBtnClear) {
     modalBtnClear.addEventListener('click', () => {
       API_KEY_PROVIDERS.forEach(p => localStorage.removeItem(`${STORAGE_KEYS_PREFIX}${p}`));
-      if (checkboxDontSave) checkboxDontSave.checked = false;
-      isDontSaveEnabled = false;
-      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+      if (checkboxDontSave) checkboxDontSave.checked = true;
+      isDontSaveEnabled = true;
+      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'true');
       closeClearKeysModal();
       updateKeyStatusIndicators();
       showToast(t('keysClearedToast'));
@@ -159,18 +159,18 @@ function initStorageControls() {
   // Модальное окно: кнопка "Оставить"
   if (modalBtnKeep) {
     modalBtnKeep.addEventListener('click', () => {
-      if (checkboxDontSave) checkboxDontSave.checked = false;
-      isDontSaveEnabled = false;
-      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+      if (checkboxDontSave) checkboxDontSave.checked = true;
+      isDontSaveEnabled = true;
+      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'true');
       closeClearKeysModal();
       updateKeyStatusIndicators();
     });
   }
 
-  // Модальное окно: закрытие / отмена
+  // Модальное окно: закрытие / отмена (чекбокс остаётся выключенным)
   if (modalBtnClose) {
     modalBtnClose.addEventListener('click', () => {
-      if (checkboxDontSave) checkboxDontSave.checked = true;
+      if (checkboxDontSave) checkboxDontSave.checked = false;
       closeClearKeysModal();
     });
   }
@@ -178,7 +178,7 @@ function initStorageControls() {
   if (modalEl) {
     modalEl.addEventListener('click', (e) => {
       if (e.target === modalEl) {
-        if (checkboxDontSave) checkboxDontSave.checked = true;
+        if (checkboxDontSave) checkboxDontSave.checked = false;
         closeClearKeysModal();
       }
     });
@@ -186,7 +186,7 @@ function initStorageControls() {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modalEl && modalEl.classList.contains('active')) {
-      if (checkboxDontSave) checkboxDontSave.checked = true;
+      if (checkboxDontSave) checkboxDontSave.checked = false;
       closeClearKeysModal();
     }
   });
