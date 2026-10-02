@@ -456,10 +456,55 @@ async function handleCalculateClick() {
   rerenderLastCalculation();
 }
 
+// Сохранение состояния сворачивания подсказки CMC
+const STORAGE_CMC_HINT_COLLAPSED = 'cc_cmc_hint_collapsed';
+
+/**
+ * Инициализация сворачивания/разворачивания подсказки CoinMarketCap
+ * По умолчанию подсказка развёрнута
+ */
+function initCmcHintToggle() {
+  const cmcHintBar = document.getElementById('cmc-proxy-hint-bar');
+  const btnToggleHint = document.getElementById('btn-toggle-cmc-hint');
+  const collapsedPreview = document.getElementById('cmc-hint-collapsed-content');
+
+  if (!cmcHintBar || !btnToggleHint) return;
+
+  function applyHintState(collapsed) {
+    cmcHintBar.classList.toggle('collapsed', collapsed);
+    btnToggleHint.setAttribute('aria-expanded', (!collapsed).toString());
+    const tooltipKey = collapsed ? 'cmcExpandTooltip' : 'cmcCollapseTooltip';
+    btnToggleHint.setAttribute('title', t(tooltipKey));
+    localStorage.setItem(STORAGE_CMC_HINT_COLLAPSED, collapsed ? 'true' : 'false');
+  }
+
+  // По умолчанию подсказка развёрнута (collapsed = false)
+  const savedState = localStorage.getItem(STORAGE_CMC_HINT_COLLAPSED);
+  const isCollapsed = savedState === 'true';
+  applyHintState(isCollapsed);
+
+  btnToggleHint.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const currentlyCollapsed = cmcHintBar.classList.contains('collapsed');
+    applyHintState(!currentlyCollapsed);
+  });
+
+  collapsedPreview?.addEventListener('click', () => {
+    applyHintState(false);
+  });
+
+  onLanguageChange(() => {
+    const currentlyCollapsed = cmcHintBar.classList.contains('collapsed');
+    const tooltipKey = currentlyCollapsed ? 'cmcExpandTooltip' : 'cmcCollapseTooltip';
+    btnToggleHint.setAttribute('title', t(tooltipKey));
+  });
+}
+
 // Инициализация при загрузке документа
 document.addEventListener('DOMContentLoaded', () => {
   initTopControls();
   initProviders();
+  initCmcHintToggle();
   updateDomTranslations();
   btnCalculateEl.addEventListener('click', handleCalculateClick);
 });

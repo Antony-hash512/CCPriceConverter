@@ -82,6 +82,9 @@ export const TRANSLATIONS = {
 
     // CMC permanent proxy notice
     cmcProxyNoticeHtml: 'Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a>',
+    cmcHintCollapsedPreview: "Local proxy setup (click to expand)",
+    cmcCollapseTooltip: "Collapse hint",
+    cmcExpandTooltip: "Expand hint",
 
     // Footer
     footerTitle: "CCPriceConverter • Browser Cryptocurrency Rate Calculator"
@@ -165,6 +168,9 @@ export const TRANSLATIONS = {
 
     // CMC permanent proxy notice
     cmcProxyNoticeHtml: 'Запуск локального прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | См. <a href="instructions.html" class="hint-link">Инструкция</a>',
+    cmcHintCollapsedPreview: "Настройка локального прокси (нажмите, чтобы развернуть)",
+    cmcCollapseTooltip: "Свернуть подсказку",
+    cmcExpandTooltip: "Развернуть подсказку",
 
     // Footer
     footerTitle: "CCPriceConverter • Браузерный калькулятор курсов криптовалют"

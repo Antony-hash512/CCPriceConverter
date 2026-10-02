@@ -144,10 +144,28 @@
               </div>
             </div>
           </div>
-          <!-- Permanent CMC proxy hint (displayed always, independent of checkbox) -->
+          <!-- Collapsible CMC proxy hint (displayed always, expanded by default) -->
           <div class="provider-hint-bar" id="cmc-proxy-hint-bar">
-            <span class="hint-icon">💡</span>
-            <span class="hint-text" data-i18n-html="cmcProxyNoticeHtml">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a></span>
+            <div class="hint-bar-inner">
+              <span class="hint-icon">💡</span>
+              
+              <!-- Content when expanded (default) -->
+              <span class="hint-expanded-content" id="cmc-hint-expanded-content">
+                <span class="hint-text" data-i18n-html="cmcProxyNoticeHtml">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a></span>
+              </span>
+
+              <!-- Preview when collapsed -->
+              <span class="hint-collapsed-content" id="cmc-hint-collapsed-content" style="display: none;">
+                <span data-i18n="cmcHintCollapsedPreview">Local proxy setup (click to expand)</span>
+              </span>
+
+              <!-- Toggle button -->
+              <button type="button" class="hint-toggle-btn" id="btn-toggle-cmc-hint" aria-expanded="true" title="Collapse hint" data-i18n-title="cmcCollapseTooltip">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
