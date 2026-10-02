@@ -82,7 +82,8 @@ You can also open `index.html` directly in your browser (via `file:///` or any s
    - You can select anywhere from 1 to 4 providers.
    - If only one checkbox is active, it becomes locked from being unchecked (at least one source must always remain selected).
    - When activating CoinMarketCap, CoinGecko, or CoinPaprika, an API key input field appears to the right.
-   - If you uncheck a provider, the entered key is not erased; it remains saved in memory and cached in `localStorage`.
+   - An indicator appears to the left of the input: a floppy disk emoji (`💾`) when saved in `localStorage`, or a crossed-out floppy disk when non-saving mode is enabled.
+   - If you uncheck a provider, the entered key is not erased; it remains saved in memory and cached in `localStorage` (unless non-saving mode is active).
 
 2. **Entering Trade Parameters (Input)**:
    - In the **"Sell"** column, choose a cryptocurrency (BTC, ETH, BCH, ZEC, XMR, XRP) and enter the volume you are selling.
@@ -106,3 +107,8 @@ You can also open `index.html` directly in your browser (via `file:///` or any s
 5. **Changing Language and Theme (at the very top of the page)**:
    - **Interface Language**: Instant switching between **English** (default) and **Русский** (saves choice to `localStorage` and immediately translates all on-screen results).
    - **Color Theme**: Choice between **Light**, **Dark** (default), and **System** (automatically adapts to your operating system settings).
+
+6. **API Key Privacy & Storage Controls**:
+   - **"Do not save keys" Checkbox**: Preventive security mode for shared or foreign computers. When checked, entered API keys remain strictly in runtime memory and are not written to `localStorage`. A crossed-out floppy disk icon is displayed next to inputs.
+   - **"Clear keys" Button**: Immediately wipes all saved API keys from browser `localStorage` and clears current input fields.
+   - **Interactive Modal on Uncheck**: If you uncheck "Do not save keys" when keys are already stored in `localStorage`, a modal dialog appears offering options to **"Clear"** or **"Keep"** the stored keys.

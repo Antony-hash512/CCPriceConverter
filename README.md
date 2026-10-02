@@ -35,9 +35,14 @@
 - **Strict On-Demand Fetching**:
   - API requests are sent **only** when clicking the **"Calculate"** button (no timer polling or background requests).
   - The button enters a 3-second lockout state with label **"Sent"** and a cooldown progress bar to prevent duplicate submissions.
-- **Top Preferences Bar**:
+- **Top Preferences & Security Bar**:
   - **Language Switcher**: Instant switching between **English** (default) and **Русский** with full dynamic re-translation of on-screen results.
   - **Theme Switcher**: **Light**, **Dark** (default), and **System** (follows OS preferences in real time).
+  - **API Key Storage & Privacy Controls**:
+    - **"Do not save keys" Checkbox**: Preventive non-saving mode designed for shared or foreign computers. When checked, entered API keys remain strictly in runtime memory and are never written to `localStorage`.
+    - **"Clear keys" Button**: Immediately wipes all saved API keys from browser `localStorage` and clears active input fields.
+    - **Visual Status Indicators**: Left of each API key input, displays a floppy disk (`💾`) icon when the key is saved in `localStorage`, or a crossed-out floppy disk icon when saving is blocked by the preventive checkbox.
+    - **Safe Uncheck Confirmation**: If unchecking "Do not save keys" while keys are already stored in `localStorage`, an interactive modal dialog prompts the user to either **"Clear"** or **"Keep"** the stored keys.
 
 ---
 
@@ -154,9 +159,14 @@ CCPriceConverter/
 - **Запросы строго по требованию**:
   - Сетевые вызовы происходят **исключительно** по клику на кнопку **«Посчитать»** (никаких фоновых запросов или таймеров).
   - После клика кнопка блокируется на 3 секунды со статусом **«Отправлено»** и индикатором перезарядки.
-- **Верхняя панель настроек**:
+- **Верхняя панель настроек и безопасности**:
   - **Смена языка**: мгновенное переключение между **English** (по умолчанию) и **Русский** с динамическим переводом всех уже рассчитанных результатов.
   - **Смена темы**: **Light** (светлая), **Dark** (тёмная — по умолчанию) и **System** (системная, подстраивается под тему ОС).
+  - **Управление API-ключами и конфиденциальность**:
+    - **Чекбокс «Не сохранять ключи»**: превентивный режим безопасности для работы на чужом или общем компьютере. При установленном чекбоксе введённые API-ключи хранятся исключительно в оперативной памяти сессии и не записываются в `localStorage`.
+    - **Кнопка «Стереть ключи»**: мгновенно стирает все сохранённые ключи из `localStorage` браузера и очищает поля ввода.
+    - **Индикаторы сохранения ключа**: слева от каждого поля ввода API-ключа отображается иконка дискеты (`💾`), если ключ сохранён в `localStorage`, либо перечёркнутая дискета, если сохранение заблокировано превентивным чекбоксом.
+    - **Защита при снятии чекбокса**: если пользователь снимает отметку «Не сохранять», а в `localStorage` уже обнаружены ранее сохранённые ключи, открывается модальное окно с вариантами **«Очистить»** или **«Оставить»**.
 
 ---
 

@@ -25,13 +25,186 @@ const outputStatusBadgeEl = document.getElementById('output-status-badge');
 // Кэш последнего выполненного расчета для мгновенного перерендеринга при смене языка
 let lastCalculationData = null;
 
-// Локальное состояние API-ключей
+// Локальное состояние API-ключей и настройки сохранения
 const STORAGE_KEYS_PREFIX = 'cc_api_key_';
+const STORAGE_DONT_SAVE_KEY = 'cc_dont_save_keys';
+const API_KEY_PROVIDERS = ['coinmarketcap', 'coingecko', 'coinpaprika'];
+
+let isDontSaveEnabled = localStorage.getItem(STORAGE_DONT_SAVE_KEY) === 'true';
+
 const apiKeysCache = {
   coinmarketcap: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coinmarketcap`) || '',
   coingecko: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coingecko`) || '',
   coinpaprika: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coinpaprika`) || ''
 };
+
+// Таймер для всплывающего уведомления (toast)
+let toastTimeout = null;
+
+function showToast(message) {
+  const toastEl = document.getElementById('toast-notification');
+  if (!toastEl) return;
+  toastEl.textContent = message;
+  toastEl.classList.add('show');
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, 2600);
+}
+
+/**
+ * Обновление индикаторов сохранения ключа (дискета 💾 vs перечёркнутая дискета)
+ */
+function updateKeyStatusIndicators() {
+  API_KEY_PROVIDERS.forEach(providerId => {
+    const indicatorEl = document.getElementById(`key-status-${providerId}`);
+    const inputEl = document.getElementById(`input-key-${providerId}`);
+    if (!indicatorEl) return;
+
+    const currentVal = inputEl ? inputEl.value.trim() : (apiKeysCache[providerId] || '');
+    const hasSavedInStorage = Boolean(localStorage.getItem(`${STORAGE_KEYS_PREFIX}${providerId}`));
+
+    if (isDontSaveEnabled) {
+      // Превентивный режим: не сохранять в localStorage
+      indicatorEl.classList.remove('is-hidden', 'saved');
+      indicatorEl.classList.add('not-saved');
+      indicatorEl.setAttribute('title', t('keyNotSavedTooltip'));
+      indicatorEl.setAttribute('aria-label', t('keyNotSavedTooltip'));
+      indicatorEl.style.opacity = currentVal ? '1' : '0.55';
+    } else {
+      // Обычный режим: сохранение разрешено
+      indicatorEl.style.opacity = '1';
+      if (hasSavedInStorage || currentVal) {
+        indicatorEl.classList.remove('is-hidden', 'not-saved');
+        indicatorEl.classList.add('saved');
+        indicatorEl.setAttribute('title', t('keySavedDiskTooltip'));
+        indicatorEl.setAttribute('aria-label', t('keySavedDiskTooltip'));
+      } else {
+        indicatorEl.classList.add('is-hidden');
+        indicatorEl.classList.remove('saved', 'not-saved');
+      }
+    }
+  });
+}
+
+function openClearKeysModal() {
+  const modal = document.getElementById('modal-clear-keys');
+  if (!modal) return;
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeClearKeysModal() {
+  const modal = document.getElementById('modal-clear-keys');
+  if (!modal) return;
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+/**
+ * Инициализация элементов управления приватностью ключей (чекбокс и кнопка стирания)
+ */
+function initStorageControls() {
+  const checkboxDontSave = document.getElementById('checkbox-dont-save-keys');
+  const btnClearKeys = document.getElementById('btn-clear-saved-keys');
+  const modalEl = document.getElementById('modal-clear-keys');
+  const modalBtnClear = document.getElementById('modal-btn-clear');
+  const modalBtnKeep = document.getElementById('modal-btn-keep');
+  const modalBtnClose = document.getElementById('modal-btn-close');
+
+  if (checkboxDontSave) {
+    checkboxDontSave.checked = isDontSaveEnabled;
+    checkboxDontSave.addEventListener('change', () => {
+      if (checkboxDontSave.checked) {
+        // Включение режима: не сохранять
+        isDontSaveEnabled = true;
+        localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'true');
+        updateKeyStatusIndicators();
+      } else {
+        // Снятие чекбокса: проверяем, сохранены ли уже ключи в localStorage
+        const hasSavedKeys = API_KEY_PROVIDERS.some(p => Boolean(localStorage.getItem(`${STORAGE_KEYS_PREFIX}${p}`)));
+        if (hasSavedKeys) {
+          // Временно возвращаем отметку и показываем всплывающее окно
+          checkboxDontSave.checked = true;
+          openClearKeysModal();
+        } else {
+          // Ключей в localStorage нет — просто отключаем режим
+          isDontSaveEnabled = false;
+          localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+          // Если пользователь уже ввёл ключи в этой сессии, сохраняем их
+          API_KEY_PROVIDERS.forEach(p => {
+            if (apiKeysCache[p]) {
+              localStorage.setItem(`${STORAGE_KEYS_PREFIX}${p}`, apiKeysCache[p]);
+            }
+          });
+          updateKeyStatusIndicators();
+        }
+      }
+    });
+  }
+
+  // Модальное окно: кнопка "Очистить"
+  if (modalBtnClear) {
+    modalBtnClear.addEventListener('click', () => {
+      API_KEY_PROVIDERS.forEach(p => localStorage.removeItem(`${STORAGE_KEYS_PREFIX}${p}`));
+      if (checkboxDontSave) checkboxDontSave.checked = false;
+      isDontSaveEnabled = false;
+      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+      closeClearKeysModal();
+      updateKeyStatusIndicators();
+      showToast(t('keysClearedToast'));
+    });
+  }
+
+  // Модальное окно: кнопка "Оставить"
+  if (modalBtnKeep) {
+    modalBtnKeep.addEventListener('click', () => {
+      if (checkboxDontSave) checkboxDontSave.checked = false;
+      isDontSaveEnabled = false;
+      localStorage.setItem(STORAGE_DONT_SAVE_KEY, 'false');
+      closeClearKeysModal();
+      updateKeyStatusIndicators();
+    });
+  }
+
+  // Модальное окно: закрытие / отмена
+  if (modalBtnClose) {
+    modalBtnClose.addEventListener('click', () => {
+      if (checkboxDontSave) checkboxDontSave.checked = true;
+      closeClearKeysModal();
+    });
+  }
+
+  if (modalEl) {
+    modalEl.addEventListener('click', (e) => {
+      if (e.target === modalEl) {
+        if (checkboxDontSave) checkboxDontSave.checked = true;
+        closeClearKeysModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalEl && modalEl.classList.contains('active')) {
+      if (checkboxDontSave) checkboxDontSave.checked = true;
+      closeClearKeysModal();
+    }
+  });
+
+  // Кнопка в верхнем баре: "Стереть ключи"
+  if (btnClearKeys) {
+    btnClearKeys.addEventListener('click', () => {
+      API_KEY_PROVIDERS.forEach(p => {
+        localStorage.removeItem(`${STORAGE_KEYS_PREFIX}${p}`);
+        apiKeysCache[p] = '';
+        const inputEl = document.getElementById(`input-key-${p}`);
+        if (inputEl) inputEl.value = '';
+      });
+      updateKeyStatusIndicators();
+      showToast(t('keysClearedToast'));
+    });
+  }
+}
 
 /**
  * Инициализация кнопок верхнего бара (Язык и Тема)
@@ -55,6 +228,7 @@ function initTopControls() {
       setLanguage(lang);
       updateLangButtonsUI(lang);
       updateProvidersUI();
+      updateKeyStatusIndicators();
       if (lastCalculationData) {
         rerenderLastCalculation();
       }
@@ -65,6 +239,7 @@ function initTopControls() {
   onLanguageChange((newLang) => {
     updateLangButtonsUI(newLang);
     updateProvidersUI();
+    updateKeyStatusIndicators();
   });
 }
 
@@ -91,8 +266,16 @@ function initProviders() {
     if (inputEl) {
       inputEl.value = keyVal;
       inputEl.addEventListener('input', (e) => {
-        apiKeysCache[providerId] = e.target.value.trim();
-        localStorage.setItem(`${STORAGE_KEYS_PREFIX}${providerId}`, apiKeysCache[providerId]);
+        const trimmed = e.target.value.trim();
+        apiKeysCache[providerId] = trimmed;
+        if (!isDontSaveEnabled) {
+          if (trimmed) {
+            localStorage.setItem(`${STORAGE_KEYS_PREFIX}${providerId}`, trimmed);
+          } else {
+            localStorage.removeItem(`${STORAGE_KEYS_PREFIX}${providerId}`);
+          }
+        }
+        updateKeyStatusIndicators();
       });
     }
   }
@@ -123,6 +306,7 @@ function initProviders() {
   });
 
   updateProvidersUI();
+  updateKeyStatusIndicators();
 }
 
 /**
@@ -183,7 +367,7 @@ function getActiveProviders() {
  */
 function renderProviderSkeleton(providerId) {
   const config = PROVIDERS_CONFIG.find(p => p.id === providerId) || { name: providerId };
-  
+
   return `
     <div class="provider-card" id="card-${providerId}">
       <div class="provider-card-header">
@@ -508,6 +692,7 @@ function initCmcHintToggle() {
 // Инициализация при загрузке документа
 document.addEventListener('DOMContentLoaded', () => {
   initTopControls();
+  initStorageControls();
   initProviders();
   initCmcHintToggle();
   updateDomTranslations();

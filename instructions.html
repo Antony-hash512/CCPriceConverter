@@ -181,7 +181,7 @@ python3 server.py</pre>
             <div class="doc-step-content">
               <div class="doc-step-title">Select Providers</div>
               <p style="color: var(--text-muted); font-size: 0.9rem;">
-                DefiLlama is selected by default. You can enable 1 to 4 providers. If only one provider is selected, it cannot be unchecked. Entering API keys for paid providers persists automatically in <code>localStorage</code> even when toggled off.
+                DefiLlama is selected by default. You can enable 1 to 4 providers. If only one provider is selected, it cannot be unchecked. API key inputs show a floppy disk (<code>💾</code>) when keys are saved in <code>localStorage</code>, or a crossed disk when saving is prevented.
               </p>
             </div>
           </div>
@@ -225,6 +225,16 @@ python3 server.py</pre>
               <div class="doc-step-title">Language & Theme Customization</div>
               <p style="color: var(--text-muted); font-size: 0.9rem;">
                 Use the top preferences bar to switch between English and Russian instantly without losing calculated data, or choose Light, Dark, or System theme.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">6</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">API Key Privacy & Storage Controls</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Protect your keys when using shared computers: check <strong>"Do not save keys"</strong> to keep entered keys in temporary memory only (displays a crossed-out floppy disk icon next to fields). Use <strong>"Clear keys"</strong> to wipe stored keys at any time. When unchecking the preventive mode while keys exist in storage, an interactive modal prompts to either <strong>"Clear"</strong> or <strong>"Keep"</strong> saved keys.
               </p>
             </div>
           </div>
@@ -343,7 +353,7 @@ python3 server.py</pre>
             <div class="doc-step-content">
               <div class="doc-step-title">Выбор провайдеров</div>
               <p style="color: var(--text-muted); font-size: 0.9rem;">
-                По умолчанию активна только DefiLlama. Можно выбрать от 1 до 4 чекбоксов. Если активен только 1 чекбокс, он блокируется от снятия. При скрытии полей API-ключей введённые данные не стираются и сохраняются в <code>localStorage</code>.
+                По умолчанию активна только DefiLlama. Можно выбрать от 1 до 4 чекбоксов. Если активен только 1 чекбокс, он блокируется от снятия. Слева от полей ввода ключей отображается индикатор: дискета (<code>💾</code>), если ключ сохранён в <code>localStorage</code>, либо перечёркнутая дискета при запрете сохранения.
               </p>
             </div>
           </div>
@@ -387,6 +397,16 @@ python3 server.py</pre>
               <div class="doc-step-title">Настройка языка и темы</div>
               <p style="color: var(--text-muted); font-size: 0.9rem;">
                 В самом верху страницы можно мгновенно переключать язык (English / Русский) и тему оформления (Light, Dark, System) с моментальным обновлением всех карточек.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">6</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">Конфиденциальность и очистка API-ключей</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Для безопасной работы на чужих компьютерах отметьте чекбокс <strong>«Не сохранять ключи»</strong> (ключи не попадут в <code>localStorage</code>). Кнопка <strong>«Стереть ключи»</strong> мгновенно удаляет все сохранённые ключи из памяти браузера. При попытке снять чекбокс несохранения, если ключи уже были в хранилище, появится окно выбора: <strong>«Очистить»</strong> или <strong>«Оставить»</strong>.
               </p>
             </div>
           </div>

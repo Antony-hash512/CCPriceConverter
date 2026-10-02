@@ -86,6 +86,19 @@ export const TRANSLATIONS = {
     cmcCollapseTooltip: "Collapse hint",
     cmcExpandTooltip: "Expand hint",
 
+    // API Key Storage & Security Controls
+    dontSaveKeys: "Do not save keys",
+    dontSaveKeysTooltip: "Prevent saving API keys to browser localStorage",
+    clearSavedKeys: "Clear keys",
+    clearKeysTooltip: "Delete saved API keys from browser localStorage",
+    keysClearedToast: "Saved API keys cleared from localStorage",
+    keySavedDiskTooltip: "API key is saved in localStorage",
+    keyNotSavedTooltip: "API key is not saved to localStorage (preventive mode active)",
+    modalConfirmTitle: "Saved Keys in Storage",
+    modalConfirmText: "API keys are already saved in localStorage. Would you like to clear them now or keep them?",
+    modalActionClear: "Clear",
+    modalActionKeep: "Keep",
+
     // Footer
     footerTitle: "CCPriceConverter • Browser Cryptocurrency Rate Calculator"
   },
@@ -171,6 +184,19 @@ export const TRANSLATIONS = {
     cmcHintCollapsedPreview: "Настройка локального прокси (нажмите, чтобы развернуть)",
     cmcCollapseTooltip: "Свернуть подсказку",
     cmcExpandTooltip: "Развернуть подсказку",
+
+    // API Key Storage & Security Controls
+    dontSaveKeys: "Не сохранять ключи",
+    dontSaveKeysTooltip: "Превентивно не сохранять API-ключи в localStorage браузера",
+    clearSavedKeys: "Стереть ключи",
+    clearKeysTooltip: "Удалить сохранённые API-ключи из localStorage браузера",
+    keysClearedToast: "Сохранённые API-ключи удалены из localStorage",
+    keySavedDiskTooltip: "API-ключ сохранён в localStorage",
+    keyNotSavedTooltip: "API-ключ не сохраняется в localStorage (включен превентивный режим)",
+    modalConfirmTitle: "Сохранённые API-ключи",
+    modalConfirmText: "В localStorage браузера уже сохранены API-ключи. Очистить их или оставить сохранёнными?",
+    modalActionClear: "Очистить",
+    modalActionKeep: "Оставить",
 
     // Footer
     footerTitle: "CCPriceConverter • Браузерный калькулятор курсов криптовалют"
