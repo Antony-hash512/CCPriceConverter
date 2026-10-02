@@ -166,6 +166,75 @@ python3 server.py</pre>
         </p>
       </section>
 
+      <!-- Section: Obtaining API Keys -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🔑</span> Obtaining API Keys
+          </h2>
+          <span class="section-badge">Registration</span>
+        </div>
+
+        <div class="doc-step-list">
+          <div class="doc-step-item">
+            <div class="doc-step-num">🦙</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">DefiLlama — No key required</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                DefiLlama provides a fully free and open API. No registration or API key is needed.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🔵</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinMarketCap — Required key (free plan available)</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                1. Go to <a href="https://pro.coinmarketcap.com/signup" target="_blank" rel="noopener" style="color: #a5b4fc;">pro.coinmarketcap.com/signup</a> and create a free account.<br>
+                2. Choose the <strong>Basic</strong> plan (free).<br>
+                3. Confirm your email and log in to the Developer Portal.<br>
+                4. Copy your API key from the Dashboard.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Free plan: 10,000 calls/month, 30 calls/min — more than enough for this calculator.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🦎</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinGecko — Optional key (recommended)</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Works without a key but with strict rate limits (~10–30 req/min). A free Demo key is recommended:
+              </p>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">
+                1. Go to <a href="https://www.coingecko.com/en/api/pricing" target="_blank" rel="noopener" style="color: #a5b4fc;">coingecko.com/en/api/pricing</a> → click <strong>"Start for Free"</strong>.<br>
+                2. Sign up or log in (no credit card required).<br>
+                3. In the <a href="https://www.coingecko.com/en/api/dashboard" target="_blank" rel="noopener" style="color: #a5b4fc;">Developer Dashboard</a>, click <strong>"+ Add New Key"</strong>.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Free Demo plan: ~10,000 calls/month.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🌶️</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinPaprika — Optional key</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Works without a key on the free tier (20,000 calls/month, top 2,000 coins). Paid plans available at <a href="https://coinpaprika.com/api/" target="_blank" rel="noopener" style="color: #a5b4fc;">coinpaprika.com/api</a>.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Free keyless access is sufficient for this calculator.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Section 4: Interface Guide -->
       <section class="card-section">
         <div class="section-header">
@@ -336,6 +405,75 @@ python3 server.py</pre>
         <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0;">
           Вы можете открыть <code>index.html</code> напрямую через <code>file:///</code> или любой статический сервер. DefiLlama, CoinGecko и CoinPaprika будут работать через публичный CORS.
         </p>
+      </section>
+
+      <!-- Section: Получение API-ключей -->
+      <section class="card-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🔑</span> Получение API-ключей
+          </h2>
+          <span class="section-badge">Регистрация</span>
+        </div>
+
+        <div class="doc-step-list">
+          <div class="doc-step-item">
+            <div class="doc-step-num">🦙</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">DefiLlama — ключ не требуется</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                DefiLlama предоставляет полностью бесплатный и открытый API. Регистрация и API-ключ не нужны.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🔵</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinMarketCap — обязательный ключ (бесплатный план)</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                1. Перейдите на <a href="https://pro.coinmarketcap.com/signup" target="_blank" rel="noopener" style="color: #a5b4fc;">pro.coinmarketcap.com/signup</a> и создайте бесплатный аккаунт.<br>
+                2. Выберите план <strong>Basic</strong> (бесплатный).<br>
+                3. Подтвердите email и войдите в личный кабинет разработчика.<br>
+                4. Скопируйте API-ключ со страницы Dashboard.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Бесплатный план: 10 000 запросов/мес, 30 запросов/мин — более чем достаточно для калькулятора.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🦎</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinGecko — опциональный ключ (рекомендуется)</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Работает без ключа, но с жёсткими лимитами (~10–30 запросов/мин). Рекомендуется бесплатный Demo-ключ:
+              </p>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">
+                1. Перейдите на <a href="https://www.coingecko.com/en/api/pricing" target="_blank" rel="noopener" style="color: #a5b4fc;">coingecko.com/en/api/pricing</a> → нажмите <strong>«Start for Free»</strong>.<br>
+                2. Зарегистрируйтесь или войдите (банковская карта не требуется).<br>
+                3. В <a href="https://www.coingecko.com/en/api/dashboard" target="_blank" rel="noopener" style="color: #a5b4fc;">Developer Dashboard</a> нажмите <strong>«+ Add New Key»</strong>.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Бесплатный план (Demo): ~10 000 запросов/мес.
+              </p>
+            </div>
+          </div>
+
+          <div class="doc-step-item">
+            <div class="doc-step-num">🌶️</div>
+            <div class="doc-step-content">
+              <div class="doc-step-title">CoinPaprika — опциональный ключ</div>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Работает без ключа в рамках бесплатного тарифа (20 000 запросов/мес, топ-2000 монет). Платные планы: <a href="https://coinpaprika.com/api/" target="_blank" rel="noopener" style="color: #a5b4fc;">coinpaprika.com/api</a>.
+              </p>
+              <p style="color: var(--color-success); font-size: 0.85rem; margin-top: 0.4rem;">
+                ✅ Для калькулятора достаточно бесплатного доступа без ключа.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Section 4: Использование интерфейса -->

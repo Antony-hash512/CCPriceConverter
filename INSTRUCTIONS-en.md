@@ -75,6 +75,38 @@ You can also open `index.html` directly in your browser (via `file:///` or any s
 
 ---
 
+## Obtaining API Keys
+
+### DefiLlama
+**No API key required.** DefiLlama provides a fully free and open API with no registration needed.
+
+### CoinMarketCap (required key)
+1. Go to the sign-up page: [pro.coinmarketcap.com/signup](https://pro.coinmarketcap.com/signup)
+2. Create a free account (the **Basic** plan is free).
+3. After confirming your email, log in to the Developer Portal.
+4. Copy your API key from the Dashboard page.
+
+**Free plan (Basic):** 10,000 calls/month, 30 calls/min — more than enough for this calculator.
+
+### CoinGecko (optional key)
+CoinGecko works without a key, but with strict rate limits (~10–30 req/min). A free Demo key is recommended for stable use:
+
+1. Go to [coingecko.com/en/api/pricing](https://www.coingecko.com/en/api/pricing) and click **"Start for Free"** (Demo plan).
+2. Sign up or log in to your CoinGecko account (no credit card required).
+3. In the [Developer Dashboard](https://www.coingecko.com/en/api/dashboard), click **"+ Add New Key"** and copy your key.
+
+**Free plan (Demo):** ~10,000 calls/month.
+
+### CoinPaprika (optional key)
+CoinPaprika works without a key on its free tier (20,000 calls/month, top 2,000 coins). Paid plans are available for extended access:
+
+- API & pricing page: [coinpaprika.com/api](https://coinpaprika.com/api/)
+- The **Pro** plan ($199/mo) removes asset limits and adds extended historical data.
+
+The free keyless access is sufficient for this calculator.
+
+---
+
 ## Using the Interface
 
 1. **Selecting Providers**:
