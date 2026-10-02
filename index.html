@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор курсов криптовалют | CCPriceConverter</title>
+  <meta name="description" content="Браузерный калькулятор курсов и объемов криптовалют от DefiLlama, CoinMarketCap, CoinGecko и CoinPaprika">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <span class="pulse-dot"></span>
+        Multi-Provider Exchange Rates
+      </div>
+      <h1 class="app-title">Калькулятор курсов криптовалют</h1>
+      <p class="app-subtitle">
+        Сравнение котировок и оценка эффективности обмена по API от ведущих провайдеров
+      </p>
+    </header>
+
+    <!-- Раздел 1: Провайдеры котировок -->
+    <section class="card-section" id="section-providers">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📡</span>
+          Провайдеры котировок
+        </h2>
+        <span class="section-badge" id="providers-count-badge">1 из 4 активно</span>
+      </div>
+
+      <div class="providers-list" id="providers-list">
+        <!-- DefiLlama (По умолчанию выбран, без API-ключа) -->
+        <div class="provider-row active" id="provider-row-defillama" data-provider-id="defillama">
+          <label class="provider-label-wrap" for="checkbox-provider-defillama">
+            <span class="custom-checkbox">
+              <input type="checkbox" id="checkbox-provider-defillama" data-provider="defillama" checked>
+              <span class="checkbox-visual">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </span>
+            <div class="provider-info">
+              <span class="provider-icon icon-llama">🦙</span>
+              <span class="provider-name">DefiLlama</span>
+              <span class="provider-tag">No Key Required</span>
+            </div>
+          </label>
+          <div class="api-key-container" id="api-key-box-defillama">
+            <!-- DefiLlama не требует ключа -->
+          </div>
+        </div>
+
+        <!-- CoinMarketCap -->
+        <div class="provider-row" id="provider-row-coinmarketcap" data-provider-id="coinmarketcap">
+          <label class="provider-label-wrap" for="checkbox-provider-coinmarketcap">
+            <span class="custom-checkbox">
+              <input type="checkbox" id="checkbox-provider-coinmarketcap" data-provider="coinmarketcap">
+              <span class="checkbox-visual">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </span>
+            <div class="provider-info">
+              <span class="provider-icon icon-cmc">M</span>
+              <span class="provider-name">CoinMarketCap</span>
+              <span class="provider-tag">API Key</span>
+            </div>
+          </label>
+          <div class="api-key-container" id="api-key-box-coinmarketcap">
+            <div class="api-key-wrapper">
+              <input 
+                type="password" 
+                id="input-key-coinmarketcap" 
+                class="api-key-input" 
+                placeholder="Вставьте CMC API ключ (X-CMC_PRO_API_KEY)" 
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <button type="button" class="key-toggle-btn" data-target="input-key-coinmarketcap" title="Показать/скрыть ключ">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CoinGecko -->
+        <div class="provider-row" id="provider-row-coingecko" data-provider-id="coingecko">
+          <label class="provider-label-wrap" for="checkbox-provider-coingecko">
+            <span class="custom-checkbox">
+              <input type="checkbox" id="checkbox-provider-coingecko" data-provider="coingecko">
+              <span class="checkbox-visual">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </span>
+            <div class="provider-info">
+              <span class="provider-icon icon-gecko">🦎</span>
+              <span class="provider-name">CoinGecko</span>
+              <span class="provider-tag">Demo / Pro Key</span>
+            </div>
+          </label>
+          <div class="api-key-container" id="api-key-box-coingecko">
+            <div class="api-key-wrapper">
+              <input 
+                type="password" 
+                id="input-key-coingecko" 
+                class="api-key-input" 
+                placeholder="Demo/Pro API ключ (опционально)" 
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <button type="button" class="key-toggle-btn" data-target="input-key-coingecko" title="Показать/скрыть ключ">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CoinPaprika -->
+        <div class="provider-row" id="provider-row-coinpaprika" data-provider-id="coinpaprika">
+          <label class="provider-label-wrap" for="checkbox-provider-coinpaprika">
+            <span class="custom-checkbox">
+              <input type="checkbox" id="checkbox-provider-coinpaprika" data-provider="coinpaprika">
+              <span class="checkbox-visual">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </span>
+            <div class="provider-info">
+              <span class="provider-icon icon-paprika">🌶️</span>
+              <span class="provider-name">CoinPaprika</span>
+              <span class="provider-tag">Pro Key</span>
+            </div>
+          </label>
+          <div class="api-key-container" id="api-key-box-coinpaprika">
+            <div class="api-key-wrapper">
+              <input 
+                type="password" 
+                id="input-key-coinpaprika" 
+                class="api-key-input" 
+                placeholder="Pro API ключ (опционально)" 
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <button type="button" class="key-toggle-btn" data-target="input-key-coinpaprika" title="Показать/скрыть ключ">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Раздел 2: Input (Продажа и Покупка) -->
+    <section class="card-section" id="section-input">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>⚖️</span>
+          Параметры обмена (Input)
+        </h2>
+        <span class="section-badge">Сделка</span>
+      </div>
+
+      <div class="input-grid">
+        <!-- Столбец 1: Продажа -->
+        <div class="trade-column sell" id="trade-column-sell">
+          <div class="column-header">
+            <span class="column-label">Продажа</span>
+            <span class="column-badge">Отдаём</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="select-currency-sell">Криптовалюта для продажи</label>
+            <div class="custom-select-wrapper">
+              <select id="select-currency-sell" class="custom-select">
+                <option value="BTC" selected>Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="BCH">Bitcoin Cash (BCH)</option>
+                <option value="ZEC">Zcash (ZEC)</option>
+                <option value="XMR">Monero (XMR)</option>
+                <option value="XRP">Ripple (XRP)</option>
+              </select>
+              <div class="select-arrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="input-amount-sell">Количество</label>
+            <div class="number-input-wrapper">
+              <input 
+                type="number" 
+                id="input-amount-sell" 
+                class="number-input" 
+                step="any" 
+                min="0" 
+                placeholder="0.00"
+                value="1"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Столбец 2: Покупка -->
+        <div class="trade-column buy" id="trade-column-buy">
+          <div class="column-header">
+            <span class="column-label">Покупка</span>
+            <span class="column-badge">Получаем</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="select-currency-buy">Криптовалюта для покупки</label>
+            <div class="custom-select-wrapper">
+              <select id="select-currency-buy" class="custom-select">
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH" selected>Ethereum (ETH)</option>
+                <option value="BCH">Bitcoin Cash (BCH)</option>
+                <option value="ZEC">Zcash (ZEC)</option>
+                <option value="XMR">Monero (XMR)</option>
+                <option value="XRP">Ripple (XRP)</option>
+              </select>
+              <div class="select-arrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="input-amount-buy">Количество</label>
+            <div class="number-input-wrapper">
+              <input 
+                type="number" 
+                id="input-amount-buy" 
+                class="number-input" 
+                step="any" 
+                min="0" 
+                placeholder="0.00"
+                value="30"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Кнопка "Посчитать" с блокировкой на 3 секунды -->
+      <div class="action-button-container">
+        <button type="button" id="btn-calculate" class="btn-calculate">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span id="btn-calculate-text">Посчитать</span>
+          <div class="cooldown-bar" id="btn-cooldown-bar"></div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Раздел 3: Output (Результаты расчетов по провайдерам) -->
+    <section class="card-section" id="section-output">
+      <div class="output-section-header">
+        <h2 class="section-title">
+          <span>📊</span>
+          Результаты расчёта (Output)
+        </h2>
+        <span class="section-badge" id="output-status-badge">Ожидание запуска</span>
+      </div>
+
+      <!-- Контейнер для карточек активных провайдеров -->
+      <div class="output-cards-grid" id="output-cards-container">
+        <div class="output-empty-state" id="output-empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <p>Выберите нужных провайдеров, укажите объёмы и нажмите кнопку <strong>«Посчитать»</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div>CCPriceConverter • Браузерный калькулятор курсов криптовалют</div>
+      <div>Запуск локального прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | См. <a href="INSTRUCTIONS.md" target="_blank" class="footer-link">INSTRUCTIONS.md</a></div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
