@@ -464,17 +464,25 @@ const STORAGE_CMC_HINT_COLLAPSED = 'cc_cmc_hint_collapsed';
  * По умолчанию подсказка развёрнута
  */
 function initCmcHintToggle() {
-  const cmcHintBar = document.getElementById('cmc-proxy-hint-bar');
+  const cmcRow = document.getElementById('provider-row-coinmarketcap');
   const btnToggleHint = document.getElementById('btn-toggle-cmc-hint');
-  const collapsedPreview = document.getElementById('cmc-hint-collapsed-content');
 
-  if (!cmcHintBar || !btnToggleHint) return;
+  if (!cmcRow || !btnToggleHint) return;
 
   function applyHintState(collapsed) {
-    cmcHintBar.classList.toggle('collapsed', collapsed);
-    btnToggleHint.setAttribute('aria-expanded', (!collapsed).toString());
-    const tooltipKey = collapsed ? 'cmcExpandTooltip' : 'cmcCollapseTooltip';
-    btnToggleHint.setAttribute('title', t(tooltipKey));
+    if (collapsed) {
+      cmcRow.classList.remove('hint-expanded');
+      cmcRow.classList.add('hint-collapsed');
+      btnToggleHint.classList.add('collapsed');
+      btnToggleHint.setAttribute('aria-expanded', 'false');
+      btnToggleHint.setAttribute('title', t('cmcExpandTooltip'));
+    } else {
+      cmcRow.classList.remove('hint-collapsed');
+      cmcRow.classList.add('hint-expanded');
+      btnToggleHint.classList.remove('collapsed');
+      btnToggleHint.setAttribute('aria-expanded', 'true');
+      btnToggleHint.setAttribute('title', t('cmcCollapseTooltip'));
+    }
     localStorage.setItem(STORAGE_CMC_HINT_COLLAPSED, collapsed ? 'true' : 'false');
   }
 
@@ -484,17 +492,14 @@ function initCmcHintToggle() {
   applyHintState(isCollapsed);
 
   btnToggleHint.addEventListener('click', (e) => {
+    e.preventDefault();
     e.stopPropagation();
-    const currentlyCollapsed = cmcHintBar.classList.contains('collapsed');
+    const currentlyCollapsed = cmcRow.classList.contains('hint-collapsed');
     applyHintState(!currentlyCollapsed);
   });
 
-  collapsedPreview?.addEventListener('click', () => {
-    applyHintState(false);
-  });
-
   onLanguageChange(() => {
-    const currentlyCollapsed = cmcHintBar.classList.contains('collapsed');
+    const currentlyCollapsed = cmcRow.classList.contains('hint-collapsed');
     const tooltipKey = currentlyCollapsed ? 'cmcExpandTooltip' : 'cmcCollapseTooltip';
     btnToggleHint.setAttribute('title', t(tooltipKey));
   });

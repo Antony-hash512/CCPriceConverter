@@ -107,23 +107,34 @@
         </div>
 
         <!-- CoinMarketCap -->
-        <div class="provider-row provider-row-with-hint" id="provider-row-coinmarketcap" data-provider-id="coinmarketcap">
+        <!-- CoinMarketCap -->
+        <div class="provider-row hint-expanded" id="provider-row-coinmarketcap" data-provider-id="coinmarketcap">
           <div class="provider-row-main">
-            <label class="provider-label-wrap" for="checkbox-provider-coinmarketcap">
-              <span class="custom-checkbox">
-                <input type="checkbox" id="checkbox-provider-coinmarketcap" data-provider="coinmarketcap">
-                <span class="checkbox-visual">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+            <div class="provider-label-group">
+              <label class="provider-label-wrap" for="checkbox-provider-coinmarketcap">
+                <span class="custom-checkbox">
+                  <input type="checkbox" id="checkbox-provider-coinmarketcap" data-provider="coinmarketcap">
+                  <span class="checkbox-visual">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
                 </span>
-              </span>
-              <div class="provider-info">
-                <span class="provider-icon icon-cmc">M</span>
-                <span class="provider-name">CoinMarketCap</span>
-                <span class="provider-tag" data-i18n="apiKeyTag">API Key</span>
-              </div>
-            </label>
+                <div class="provider-info">
+                  <span class="provider-icon icon-cmc">M</span>
+                  <span class="provider-name">CoinMarketCap</span>
+                  <span class="provider-tag" data-i18n="apiKeyTag">API Key</span>
+                </div>
+              </label>
+              <!-- Кнопка разворачивания/сворачивания справа от надписи "API ключ" -->
+              <button type="button" class="cmc-hint-toggle-badge" id="btn-toggle-cmc-hint" aria-expanded="true" title="Collapse hint" data-i18n-title="cmcCollapseTooltip">
+                <span class="badge-icon">💡</span>
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+              </button>
+            </div>
+
             <div class="api-key-container" id="api-key-box-coinmarketcap">
               <div class="api-key-wrapper">
                 <input 
@@ -144,28 +155,11 @@
               </div>
             </div>
           </div>
-          <!-- Collapsible CMC proxy hint (displayed always, expanded by default) -->
+
+          <!-- Блок с текстом подсказки (развёрнут по умолчанию, полностью исчезает при сворачивании) -->
           <div class="provider-hint-bar" id="cmc-proxy-hint-bar">
-            <div class="hint-bar-inner">
-              <span class="hint-icon">💡</span>
-              
-              <!-- Content when expanded (default) -->
-              <span class="hint-expanded-content" id="cmc-hint-expanded-content">
-                <span class="hint-text" data-i18n-html="cmcProxyNoticeHtml">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a></span>
-              </span>
-
-              <!-- Preview when collapsed -->
-              <span class="hint-collapsed-content" id="cmc-hint-collapsed-content" style="display: none;">
-                <span data-i18n="cmcHintCollapsedPreview">Local proxy setup (click to expand)</span>
-              </span>
-
-              <!-- Toggle button -->
-              <button type="button" class="hint-toggle-btn" id="btn-toggle-cmc-hint" aria-expanded="true" title="Collapse hint" data-i18n-title="cmcCollapseTooltip">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="18 15 12 9 6 15"></polyline>
-                </svg>
-              </button>
-            </div>
+            <span class="hint-icon">💡</span>
+            <span class="hint-text" data-i18n-html="cmcProxyNoticeHtml">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a></span>
           </div>
         </div>
 

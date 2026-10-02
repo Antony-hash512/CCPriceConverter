@@ -346,10 +346,22 @@ body {
   background: rgba(99, 102, 241, 0.05);
 }
 
-.provider-row.provider-row-with-hint {
+/* CoinMarketCap Row Layout States */
+#provider-row-coinmarketcap.hint-expanded {
   flex-direction: column;
   align-items: stretch;
   gap: 0.75rem;
+}
+
+#provider-row-coinmarketcap.hint-collapsed {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+#provider-row-coinmarketcap.hint-collapsed #cmc-proxy-hint-bar {
+  display: none !important;
 }
 
 .provider-row-main {
@@ -360,23 +372,95 @@ body {
   width: 100%;
 }
 
-.provider-hint-bar {
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px dashed rgba(99, 102, 241, 0.28);
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.75rem;
-  width: 100%;
-  transition: var(--transition-smooth);
+.provider-label-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
 }
 
-.hint-bar-inner {
+/* Toggle Badge right next to "API Key" */
+.cmc-hint-toggle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  color: #a5b4fc;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  user-select: none;
+}
+
+.cmc-hint-toggle-badge:hover {
+  background: rgba(99, 102, 241, 0.24);
+  border-color: rgba(99, 102, 241, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.cmc-hint-toggle-badge .badge-icon {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.cmc-hint-toggle-badge .chevron-icon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When collapsed: chevron rotates to point down */
+.cmc-hint-toggle-badge.collapsed .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.cmc-hint-toggle-badge.collapsed {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-subtle);
+  color: var(--text-dim);
+}
+
+.cmc-hint-toggle-badge.collapsed:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.35);
+  color: var(--text-main);
+}
+
+[data-theme="light"] .cmc-hint-toggle-badge {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: #4f46e5;
+}
+
+[data-theme="light"] .cmc-hint-toggle-badge.collapsed {
+  background: rgba(15, 23, 42, 0.05);
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #64748b;
+}
+
+[data-theme="light"] .cmc-hint-toggle-badge.collapsed:hover {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4338ca;
+}
+
+/* Permanent CMC Hint Bar when expanded */
+.provider-hint-bar {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  width: 100%;
   font-size: 0.8rem;
   color: var(--text-muted);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px dashed rgba(99, 102, 241, 0.28);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.85rem;
   line-height: 1.45;
+  width: 100%;
+  transition: var(--transition-smooth);
 }
 
 .provider-hint-bar .hint-icon {
@@ -385,76 +469,8 @@ body {
   flex-shrink: 0;
 }
 
-.hint-expanded-content {
+.provider-hint-bar .hint-text {
   flex: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.hint-collapsed-content {
-  flex: 1;
-  cursor: pointer;
-  color: var(--text-dim);
-  font-size: 0.78rem;
-  user-select: none;
-}
-
-.hint-collapsed-content:hover {
-  color: var(--text-main);
-}
-
-.hint-toggle-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: var(--text-dim);
-  cursor: pointer;
-  padding: 0.2rem 0.35rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-smooth);
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.hint-toggle-btn:hover {
-  color: var(--text-main);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--border-subtle);
-}
-
-.hint-toggle-btn .chevron-icon {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Collapsed State */
-.provider-hint-bar.collapsed {
-  padding: 0.35rem 0.75rem;
-  background: rgba(13, 18, 31, 0.35);
-  border-style: solid;
-  border-color: var(--border-subtle);
-}
-
-.provider-hint-bar.collapsed:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  background: rgba(99, 102, 241, 0.05);
-}
-
-.provider-hint-bar.collapsed .hint-expanded-content {
-  display: none !important;
-}
-
-.provider-hint-bar.collapsed .hint-collapsed-content {
-  display: inline-block !important;
-}
-
-.provider-hint-bar.collapsed .chevron-icon {
-  transform: rotate(180deg);
 }
 
 .provider-hint-bar code {
@@ -485,16 +501,6 @@ body {
   color: #334155;
 }
 
-[data-theme="light"] .provider-hint-bar.collapsed {
-  background: rgba(248, 250, 252, 0.7);
-  border-color: rgba(15, 23, 42, 0.08);
-}
-
-[data-theme="light"] .provider-hint-bar.collapsed:hover {
-  background: #ffffff;
-  border-color: rgba(99, 102, 241, 0.3);
-}
-
 [data-theme="light"] .provider-hint-bar code {
   background: #ffffff;
   color: #4f46e5;
@@ -507,11 +513,6 @@ body {
 
 [data-theme="light"] .provider-hint-bar .hint-link:hover {
   color: #312e81;
-}
-
-[data-theme="light"] .hint-toggle-btn:hover {
-  background: rgba(15, 23, 42, 0.06);
-  border-color: rgba(15, 23, 42, 0.1);
 }
 
 .provider-label-wrap {
