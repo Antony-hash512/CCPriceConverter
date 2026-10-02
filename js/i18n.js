@@ -80,10 +80,11 @@ export const TRANSLATIONS = {
     alertPositiveBuy: "Please enter a valid positive quantity for the currency to buy.",
     alertSelectProvider: "At least one quote provider must be selected.",
 
+    // CMC permanent proxy notice
+    cmcProxyNoticeHtml: 'Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a>',
+
     // Footer
-    footerTitle: "CCPriceConverter • Browser Cryptocurrency Rate Calculator",
-    footerProxyText: "Run local proxy for CoinMarketCap: `npm start` or `python3 server.py` | See ",
-    footerInstructionsLink: "Instructions"
+    footerTitle: "CCPriceConverter • Browser Cryptocurrency Rate Calculator"
   },
 
   ru: {
@@ -162,10 +163,11 @@ export const TRANSLATIONS = {
     alertPositiveBuy: "Пожалуйста, введите корректное положительное количество покупаемой валюты.",
     alertSelectProvider: "Необходимо выбрать хотя бы одного провайдера котировок.",
 
+    // CMC permanent proxy notice
+    cmcProxyNoticeHtml: 'Запуск локального прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | См. <a href="instructions.html" class="hint-link">Инструкция</a>',
+
     // Footer
-    footerTitle: "CCPriceConverter • Браузерный калькулятор курсов криптовалют",
-    footerProxyText: "Запуск локального прокси для CoinMarketCap: `npm start` или `python3 server.py` | См. ",
-    footerInstructionsLink: "Инструкция"
+    footerTitle: "CCPriceConverter • Браузерный калькулятор курсов криптовалют"
   }
 };
 
@@ -210,6 +212,11 @@ export function updateDomTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     el.textContent = t(key);
+  });
+
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    el.innerHTML = t(key);
   });
 
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {

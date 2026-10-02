@@ -107,40 +107,47 @@
         </div>
 
         <!-- CoinMarketCap -->
-        <div class="provider-row" id="provider-row-coinmarketcap" data-provider-id="coinmarketcap">
-          <label class="provider-label-wrap" for="checkbox-provider-coinmarketcap">
-            <span class="custom-checkbox">
-              <input type="checkbox" id="checkbox-provider-coinmarketcap" data-provider="coinmarketcap">
-              <span class="checkbox-visual">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+        <div class="provider-row provider-row-with-hint" id="provider-row-coinmarketcap" data-provider-id="coinmarketcap">
+          <div class="provider-row-main">
+            <label class="provider-label-wrap" for="checkbox-provider-coinmarketcap">
+              <span class="custom-checkbox">
+                <input type="checkbox" id="checkbox-provider-coinmarketcap" data-provider="coinmarketcap">
+                <span class="checkbox-visual">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
               </span>
-            </span>
-            <div class="provider-info">
-              <span class="provider-icon icon-cmc">M</span>
-              <span class="provider-name">CoinMarketCap</span>
-              <span class="provider-tag" data-i18n="apiKeyTag">API Key</span>
+              <div class="provider-info">
+                <span class="provider-icon icon-cmc">M</span>
+                <span class="provider-name">CoinMarketCap</span>
+                <span class="provider-tag" data-i18n="apiKeyTag">API Key</span>
+              </div>
+            </label>
+            <div class="api-key-container" id="api-key-box-coinmarketcap">
+              <div class="api-key-wrapper">
+                <input 
+                  type="password" 
+                  id="input-key-coinmarketcap" 
+                  class="api-key-input" 
+                  placeholder="Enter CMC API key (X-CMC_PRO_API_KEY)" 
+                  data-i18n-placeholder="cmcPlaceholder"
+                  autocomplete="off"
+                  spellcheck="false"
+                >
+                <button type="button" class="key-toggle-btn" data-target="input-key-coinmarketcap" title="Show/hide key" data-i18n-title="keyToggleTitle">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
             </div>
-          </label>
-          <div class="api-key-container" id="api-key-box-coinmarketcap">
-            <div class="api-key-wrapper">
-              <input 
-                type="password" 
-                id="input-key-coinmarketcap" 
-                class="api-key-input" 
-                placeholder="Enter CMC API key (X-CMC_PRO_API_KEY)" 
-                data-i18n-placeholder="cmcPlaceholder"
-                autocomplete="off"
-                spellcheck="false"
-              >
-              <button type="button" class="key-toggle-btn" data-target="input-key-coinmarketcap" title="Show/hide key" data-i18n-title="keyToggleTitle">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
-            </div>
+          </div>
+          <!-- Permanent CMC proxy hint (displayed always, independent of checkbox) -->
+          <div class="provider-hint-bar" id="cmc-proxy-hint-bar">
+            <span class="hint-icon">💡</span>
+            <span class="hint-text" data-i18n-html="cmcProxyNoticeHtml">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a></span>
           </div>
         </div>
 
@@ -355,10 +362,6 @@
     <!-- Footer -->
     <footer class="app-footer">
       <div data-i18n="footerTitle">CCPriceConverter • Browser Cryptocurrency Rate Calculator</div>
-      <div>
-        <span data-i18n="footerProxyText">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See </span>
-        <a href="instructions.html" class="footer-link" data-i18n="footerInstructionsLink">Instructions</a>
-      </div>
     </footer>
 
   </div>
