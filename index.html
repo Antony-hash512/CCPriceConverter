@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Калькулятор курсов криптовалют | CCPriceConverter</title>
-  <meta name="description" content="Браузерный калькулятор курсов и объемов криптовалют от DefiLlama, CoinMarketCap, CoinGecko и CoinPaprika">
+  <title data-i18n="pageTitle">Cryptocurrency Rate Calculator | CCPriceConverter</title>
+  <meta name="description" content="Browser cryptocurrency rate and volume calculator from DefiLlama, CoinMarketCap, CoinGecko, and CoinPaprika" data-i18n="pageDesc">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,30 +16,77 @@
 <body>
   <div class="app-container">
     
+    <!-- Top Controls Bar: Language & Theme -->
+    <aside class="top-controls-bar" id="top-controls-bar" aria-label="Page preferences">
+      <!-- Language Switcher: Russian / English (Default: English) -->
+      <div class="controls-group" id="lang-switch-group" role="group" aria-label="Language selection">
+        <button type="button" class="ctrl-btn lang-btn active" data-lang="en" id="btn-lang-en" aria-pressed="true">
+          <span class="flag-icon">🇬🇧</span>
+          <span>English</span>
+        </button>
+        <button type="button" class="ctrl-btn lang-btn" data-lang="ru" id="btn-lang-ru" aria-pressed="false">
+          <span class="flag-icon">🇷🇺</span>
+          <span>Русский</span>
+        </button>
+      </div>
+
+      <!-- Theme Switcher: Light, Dark, System (Default: Dark) -->
+      <div class="controls-group" id="theme-switch-group" role="group" aria-label="Theme selection">
+        <button type="button" class="ctrl-btn theme-btn" data-theme="light" id="btn-theme-light" title="Light theme">
+          <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span class="theme-label" data-i18n="themeLight">Light</span>
+        </button>
+        <button type="button" class="ctrl-btn theme-btn active" data-theme="dark" id="btn-theme-dark" title="Dark theme">
+          <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span class="theme-label" data-i18n="themeDark">Dark</span>
+        </button>
+        <button type="button" class="ctrl-btn theme-btn" data-theme="system" id="btn-theme-system" title="System theme">
+          <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span class="theme-label" data-i18n="themeSystem">System</span>
+        </button>
+      </div>
+    </aside>
+
     <!-- Header -->
     <header class="app-header">
       <div class="brand-badge">
         <span class="pulse-dot"></span>
-        Multi-Provider Exchange Rates
+        <span data-i18n="brandBadge">Multi-Provider Exchange Rates</span>
       </div>
-      <h1 class="app-title">Калькулятор курсов криптовалют</h1>
-      <p class="app-subtitle">
-        Сравнение котировок и оценка эффективности обмена по API от ведущих провайдеров
+      <h1 class="app-title" data-i18n="appTitle">Crypto Rate Calculator</h1>
+      <p class="app-subtitle" data-i18n="appSubtitle">
+        Compare live quotes and evaluate exchange efficiency via APIs from leading providers
       </p>
     </header>
 
-    <!-- Раздел 1: Провайдеры котировок -->
+    <!-- Section 1: Providers -->
     <section class="card-section" id="section-providers">
       <div class="section-header">
         <h2 class="section-title">
           <span>📡</span>
-          Провайдеры котировок
+          <span data-i18n="providersTitle">Quote Providers</span>
         </h2>
-        <span class="section-badge" id="providers-count-badge">1 из 4 активно</span>
+        <span class="section-badge" id="providers-count-badge">1 of 4 active</span>
       </div>
 
       <div class="providers-list" id="providers-list">
-        <!-- DefiLlama (По умолчанию выбран, без API-ключа) -->
+        <!-- DefiLlama (Checked by default, no API key) -->
         <div class="provider-row active" id="provider-row-defillama" data-provider-id="defillama">
           <label class="provider-label-wrap" for="checkbox-provider-defillama">
             <span class="custom-checkbox">
@@ -53,11 +100,11 @@
             <div class="provider-info">
               <span class="provider-icon icon-llama">🦙</span>
               <span class="provider-name">DefiLlama</span>
-              <span class="provider-tag">No Key Required</span>
+              <span class="provider-tag" data-i18n="noKeyRequired">No Key Required</span>
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-defillama">
-            <!-- DefiLlama не требует ключа -->
+            <!-- DefiLlama does not require a key -->
           </div>
         </div>
 
@@ -75,7 +122,7 @@
             <div class="provider-info">
               <span class="provider-icon icon-cmc">M</span>
               <span class="provider-name">CoinMarketCap</span>
-              <span class="provider-tag">API Key</span>
+              <span class="provider-tag" data-i18n="apiKeyTag">API Key</span>
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-coinmarketcap">
@@ -84,11 +131,12 @@
                 type="password" 
                 id="input-key-coinmarketcap" 
                 class="api-key-input" 
-                placeholder="Вставьте CMC API ключ (X-CMC_PRO_API_KEY)" 
+                placeholder="Enter CMC API key (X-CMC_PRO_API_KEY)" 
+                data-i18n-placeholder="cmcPlaceholder"
                 autocomplete="off"
                 spellcheck="false"
               >
-              <button type="button" class="key-toggle-btn" data-target="input-key-coinmarketcap" title="Показать/скрыть ключ">
+              <button type="button" class="key-toggle-btn" data-target="input-key-coinmarketcap" title="Show/hide key" data-i18n-title="keyToggleTitle">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
@@ -112,7 +160,7 @@
             <div class="provider-info">
               <span class="provider-icon icon-gecko">🦎</span>
               <span class="provider-name">CoinGecko</span>
-              <span class="provider-tag">Demo / Pro Key</span>
+              <span class="provider-tag" data-i18n="demoProKeyTag">Demo / Pro Key</span>
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-coingecko">
@@ -121,11 +169,12 @@
                 type="password" 
                 id="input-key-coingecko" 
                 class="api-key-input" 
-                placeholder="Demo/Pro API ключ (опционально)" 
+                placeholder="Demo/Pro API key (optional)" 
+                data-i18n-placeholder="geckoPlaceholder"
                 autocomplete="off"
                 spellcheck="false"
               >
-              <button type="button" class="key-toggle-btn" data-target="input-key-coingecko" title="Показать/скрыть ключ">
+              <button type="button" class="key-toggle-btn" data-target="input-key-coingecko" title="Show/hide key" data-i18n-title="keyToggleTitle">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
@@ -149,7 +198,7 @@
             <div class="provider-info">
               <span class="provider-icon icon-paprika">🌶️</span>
               <span class="provider-name">CoinPaprika</span>
-              <span class="provider-tag">Pro Key</span>
+              <span class="provider-tag" data-i18n="proKeyTag">Pro Key</span>
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-coinpaprika">
@@ -158,11 +207,12 @@
                 type="password" 
                 id="input-key-coinpaprika" 
                 class="api-key-input" 
-                placeholder="Pro API ключ (опционально)" 
+                placeholder="Pro API key (optional)" 
+                data-i18n-placeholder="paprikaPlaceholder"
                 autocomplete="off"
                 spellcheck="false"
               >
-              <button type="button" class="key-toggle-btn" data-target="input-key-coinpaprika" title="Показать/скрыть ключ">
+              <button type="button" class="key-toggle-btn" data-target="input-key-coinpaprika" title="Show/hide key" data-i18n-title="keyToggleTitle">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
@@ -174,26 +224,26 @@
       </div>
     </section>
 
-    <!-- Раздел 2: Input (Продажа и Покупка) -->
+    <!-- Section 2: Input (Sell & Buy) -->
     <section class="card-section" id="section-input">
       <div class="section-header">
         <h2 class="section-title">
           <span>⚖️</span>
-          Параметры обмена (Input)
+          <span data-i18n="inputTitle">Exchange Parameters (Input)</span>
         </h2>
-        <span class="section-badge">Сделка</span>
+        <span class="section-badge" data-i18n="inputBadge">Trade</span>
       </div>
 
       <div class="input-grid">
-        <!-- Столбец 1: Продажа -->
+        <!-- Column 1: Sell -->
         <div class="trade-column sell" id="trade-column-sell">
           <div class="column-header">
-            <span class="column-label">Продажа</span>
-            <span class="column-badge">Отдаём</span>
+            <span class="column-label" data-i18n="sellColumnTitle">Sell</span>
+            <span class="column-badge" data-i18n="sellBadge">You Pay</span>
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="select-currency-sell">Криптовалюта для продажи</label>
+            <label class="field-label" for="select-currency-sell" data-i18n="sellCurrencyLabel">Cryptocurrency to Sell</label>
             <div class="custom-select-wrapper">
               <select id="select-currency-sell" class="custom-select">
                 <option value="BTC" selected>Bitcoin (BTC)</option>
@@ -212,7 +262,7 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="input-amount-sell">Количество</label>
+            <label class="field-label" for="input-amount-sell" data-i18n="sellAmountLabel">Quantity</label>
             <div class="number-input-wrapper">
               <input 
                 type="number" 
@@ -227,15 +277,15 @@
           </div>
         </div>
 
-        <!-- Столбец 2: Покупка -->
+        <!-- Column 2: Buy -->
         <div class="trade-column buy" id="trade-column-buy">
           <div class="column-header">
-            <span class="column-label">Покупка</span>
-            <span class="column-badge">Получаем</span>
+            <span class="column-label" data-i18n="buyColumnTitle">Buy</span>
+            <span class="column-badge" data-i18n="buyBadge">You Receive</span>
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="select-currency-buy">Криптовалюта для покупки</label>
+            <label class="field-label" for="select-currency-buy" data-i18n="buyCurrencyLabel">Cryptocurrency to Buy</label>
             <div class="custom-select-wrapper">
               <select id="select-currency-buy" class="custom-select">
                 <option value="BTC">Bitcoin (BTC)</option>
@@ -254,7 +304,7 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="input-amount-buy">Количество</label>
+            <label class="field-label" for="input-amount-buy" data-i18n="buyAmountLabel">Quantity</label>
             <div class="number-input-wrapper">
               <input 
                 type="number" 
@@ -270,44 +320,47 @@
         </div>
       </div>
 
-      <!-- Кнопка "Посчитать" с блокировкой на 3 секунды -->
+      <!-- Action Button "Calculate" with 3-second lockout -->
       <div class="action-button-container">
         <button type="button" id="btn-calculate" class="btn-calculate">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          <span id="btn-calculate-text">Посчитать</span>
+          <span id="btn-calculate-text" data-i18n="btnCalculate">Calculate</span>
           <div class="cooldown-bar" id="btn-cooldown-bar"></div>
         </button>
       </div>
     </section>
 
-    <!-- Раздел 3: Output (Результаты расчетов по провайдерам) -->
+    <!-- Section 3: Output (Provider Cards) -->
     <section class="card-section" id="section-output">
       <div class="output-section-header">
         <h2 class="section-title">
           <span>📊</span>
-          Результаты расчёта (Output)
+          <span data-i18n="outputTitle">Calculation Results (Output)</span>
         </h2>
-        <span class="section-badge" id="output-status-badge">Ожидание запуска</span>
+        <span class="section-badge" id="output-status-badge" data-i18n="outputIdleBadge">Awaiting calculation</span>
       </div>
 
-      <!-- Контейнер для карточек активных провайдеров -->
+      <!-- Cards Container -->
       <div class="output-cards-grid" id="output-cards-container">
         <div class="output-empty-state" id="output-empty-state">
           <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M12 6v6l4 2"></path>
           </svg>
-          <p>Выберите нужных провайдеров, укажите объёмы и нажмите кнопку <strong>«Посчитать»</strong></p>
+          <p data-i18n="emptyStateText">Select providers, enter trade amounts, and click «Calculate»</p>
         </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="app-footer">
-      <div>CCPriceConverter • Браузерный калькулятор курсов криптовалют</div>
-      <div>Запуск локального прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | См. <a href="INSTRUCTIONS.md" target="_blank" class="footer-link">INSTRUCTIONS.md</a></div>
+      <div data-i18n="footerTitle">CCPriceConverter • Browser Cryptocurrency Rate Calculator</div>
+      <div>
+        <span data-i18n="footerProxyText">Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See </span>
+        <a href="INSTRUCTIONS.md" target="_blank" class="footer-link" data-i18n="footerInstructionsLink">Instructions (RU)</a>
+      </div>
     </footer>
 
   </div>

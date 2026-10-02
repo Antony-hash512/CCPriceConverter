@@ -4,9 +4,10 @@
 
 import { SUPPORTED_COINS, PROVIDERS_CONFIG, fetchProviderRates } from './providers.js';
 import { calculateExchange, formatUsd, formatPercent } from './calculator.js';
+import { t, getLanguage, setLanguage, updateDomTranslations, onLanguageChange } from './i18n.js';
+import { initTheme, applyTheme, getThemeMode } from './theme.js';
 
 // Селекторы DOM
-const providersListEl = document.getElementById('providers-list');
 const providersCountBadgeEl = document.getElementById('providers-count-badge');
 
 const selectCurrencySellEl = document.getElementById('select-currency-sell');
@@ -21,6 +22,9 @@ const btnCooldownBarEl = document.getElementById('btn-cooldown-bar');
 const outputCardsContainerEl = document.getElementById('output-cards-container');
 const outputStatusBadgeEl = document.getElementById('output-status-badge');
 
+// Кэш последнего выполненного расчета для мгновенного перерендеринга при смене языка
+let lastCalculationData = null;
+
 // Локальное состояние API-ключей
 const STORAGE_KEYS_PREFIX = 'cc_api_key_';
 const apiKeysCache = {
@@ -28,6 +32,54 @@ const apiKeysCache = {
   coingecko: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coingecko`) || '',
   coinpaprika: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coinpaprika`) || ''
 };
+
+/**
+ * Инициализация кнопок верхнего бара (Язык и Тема)
+ */
+function initTopControls() {
+  // 1. Тема
+  initTheme();
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-theme');
+      applyTheme(mode);
+    });
+  });
+
+  // 2. Язык
+  const currentLang = getLanguage();
+  updateLangButtonsUI(currentLang);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.getAttribute('data-lang');
+      setLanguage(lang);
+      updateLangButtonsUI(lang);
+      updateProvidersUI();
+      if (lastCalculationData) {
+        rerenderLastCalculation();
+      }
+    });
+  });
+
+  // При смене языка пересчитываем динамические элементы
+  onLanguageChange((newLang) => {
+    updateLangButtonsUI(newLang);
+    updateProvidersUI();
+  });
+}
+
+function updateLangButtonsUI(activeLang) {
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isTarget = btn.getAttribute('data-lang') === activeLang;
+    if (isTarget) {
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+    } else {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+  });
+}
 
 /**
  * Инициализация состояния чекбоксов провайдеров и полей ввода
@@ -83,14 +135,17 @@ function updateProvidersUI() {
   const activeCheckboxes = checkboxes.filter(cb => cb.checked);
   const activeCount = activeCheckboxes.length;
 
-  providersCountBadgeEl.textContent = `${activeCount} из ${checkboxes.length} активно`;
+  providersCountBadgeEl.textContent = t('providersActiveBadge', {
+    active: activeCount,
+    total: checkboxes.length
+  });
 
   // Правило ТЗ: "пользователь может активировать любое количество чебоксов от 1 до 4,
   // но если активен только 1 любой чекбокс, то он становится не снимаемым."
   checkboxes.forEach(cb => {
     if (activeCount === 1 && cb.checked) {
       cb.disabled = true;
-      cb.closest('.provider-row').title = 'Нельзя отключить единственный активный провайдер';
+      cb.closest('.provider-row').title = t('singleProviderTooltip');
     } else {
       cb.disabled = false;
       cb.closest('.provider-row').title = '';
@@ -137,31 +192,31 @@ function renderProviderSkeleton(providerId) {
           <span>${config.name}</span>
         </div>
         <span class="card-status-badge status-loading">
-          <span class="pulse-dot"></span> Загрузка котировок...
+          <span class="pulse-dot"></span> ${t('statusLoading')}
         </span>
       </div>
       <div class="card-content-grid">
         <div class="metric-box">
-          <div class="metric-box-title">Курс 1 ед. продажи</div>
+          <div class="metric-box-title">${t('metricCurrentRate')} (1)</div>
           <div class="metric-box-value">...</div>
         </div>
         <div class="metric-box">
-          <div class="metric-box-title">Курс 1 ед. покупки</div>
+          <div class="metric-box-title">${t('metricCurrentRate')} (2)</div>
           <div class="metric-box-value">...</div>
         </div>
         <div class="metric-box">
-          <div class="metric-box-title">Стоимость продажи (USD)</div>
+          <div class="metric-box-title">${t('metricSellVolumeUsd')}</div>
           <div class="metric-box-value">...</div>
         </div>
         <div class="metric-box">
-          <div class="metric-box-title">Стоимость покупки (USD)</div>
+          <div class="metric-box-title">${t('metricBuyVolumeUsd')}</div>
           <div class="metric-box-value">...</div>
         </div>
       </div>
       <div class="difference-banner loss-low">
         <div>
-          <div class="diff-header-text">Расчёт разницы</div>
-          <div class="diff-value">Ожидание ответа API...</div>
+          <div class="diff-header-text">${t('diffHeader')}</div>
+          <div class="diff-value">${t('statusLoading')}</div>
         </div>
       </div>
     </div>
@@ -175,9 +230,9 @@ function renderProviderError(providerId, errorMessage) {
   const config = PROVIDERS_CONFIG.find(p => p.id === providerId) || { name: providerId };
 
   let hint = '';
-  if (providerId === 'coinmarketcap' && errorMessage.includes('прокси')) {
+  if (providerId === 'coinmarketcap' && (errorMessage.includes('прокси') || errorMessage.includes('proxy'))) {
     hint = `<div style="font-size: 0.8rem; margin-top: 0.5rem; color: #94a3b8;">
-      💡 Для работы CoinMarketCap запустите локальный сервер: <code>npm start</code> или <code>python3 server.py</code>
+      ${t('cmcProxyHint')}
     </div>`;
   }
 
@@ -188,10 +243,10 @@ function renderProviderError(providerId, errorMessage) {
           <span class="provider-icon ${config.iconClass}">${config.iconText}</span>
           <span>${config.name}</span>
         </div>
-        <span class="card-status-badge status-error">Ошибка запроса</span>
+        <span class="card-status-badge status-error">${t('statusError')}</span>
       </div>
       <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1rem; color: #fca5a5; font-size: 0.88rem;">
-        <strong>Не удалось получить котировки:</strong>
+        <strong>${t('failedToFetch')}</strong>
         <p style="margin-top: 0.3rem;">${errorMessage}</p>
         ${hint}
       </div>
@@ -209,7 +264,7 @@ function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, ra
   const pBuy = rates[buySymbol];
 
   if (typeof pSell !== 'number' || typeof pBuy !== 'number') {
-    return renderProviderError(providerId, `Провайдер не вернул котировку для одной из выбранных валют (${sellSymbol} или ${buySymbol}).`);
+    return renderProviderError(providerId, t('missingRate', { sym: typeof pSell !== 'number' ? sellSymbol : buySymbol }));
   }
 
   const result = calculateExchange({
@@ -218,6 +273,14 @@ function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, ra
     buyAmount: qBuy,
     buyPrice: pBuy
   });
+
+  // Локализованный статус
+  let localizedStatusText = t('diffStatusLossLow');
+  if (result.status === 'profit') {
+    localizedStatusText = t('diffStatusProfit');
+  } else if (result.status === 'loss-high') {
+    localizedStatusText = t('diffStatusLossHigh');
+  }
 
   // HTML для отображения разницы и индикации
   // Если профит: зеленый цвет + красная надпись "(WTF?)" в скобках
@@ -241,50 +304,50 @@ function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, ra
           <span>${config.name}</span>
         </div>
         <span class="card-status-badge status-success">
-          <span class="pulse-dot"></span> Котировки получены
+          <span class="pulse-dot"></span> ${t('statusSuccess')}
         </span>
       </div>
 
       <div class="card-content-grid">
         <!-- 1. Стоимость в USD 1 единицы каждой валюты -->
         <div class="metric-box">
-          <div class="metric-box-title">1 ${sellSymbol} (Продажа)</div>
+          <div class="metric-box-title">${t('metricRateSell', { sym: sellSymbol })}</div>
           <div class="metric-box-value">${formatUsd(pSell)}</div>
-          <div class="metric-box-sub">Текущий курс API</div>
+          <div class="metric-box-sub">${t('metricCurrentRate')}</div>
         </div>
         
         <div class="metric-box">
-          <div class="metric-box-title">1 ${buySymbol} (Покупка)</div>
+          <div class="metric-box-title">${t('metricRateBuy', { sym: buySymbol })}</div>
           <div class="metric-box-value">${formatUsd(pBuy)}</div>
-          <div class="metric-box-sub">Текущий курс API</div>
+          <div class="metric-box-sub">${t('metricCurrentRate')}</div>
         </div>
 
         <!-- 2. Общие стоимости в USD всего объема -->
         <div class="metric-box">
-          <div class="metric-box-title">Всего отдаем (${qSell} ${sellSymbol})</div>
+          <div class="metric-box-title">${t('metricTotalSell', { amount: qSell, sym: sellSymbol })}</div>
           <div class="metric-box-value">${formatUsd(result.sellTotalUsd)}</div>
-          <div class="metric-box-sub">Объем продажи в USD</div>
+          <div class="metric-box-sub">${t('metricSellVolumeUsd')}</div>
         </div>
 
         <div class="metric-box">
-          <div class="metric-box-title">Всего получаем (${qBuy} ${buySymbol})</div>
+          <div class="metric-box-title">${t('metricTotalBuy', { amount: qBuy, sym: buySymbol })}</div>
           <div class="metric-box-value">${formatUsd(result.buyTotalUsd)}</div>
-          <div class="metric-box-sub">Объем покупки в USD</div>
+          <div class="metric-box-sub">${t('metricBuyVolumeUsd')}</div>
         </div>
       </div>
 
       <!-- 3. Разница между рассчитанными покупаемым и продаваемым объемом -->
       <div class="difference-banner ${result.status}">
         <div>
-          <div class="diff-header-text">${result.statusText}</div>
+          <div class="diff-header-text">${localizedStatusText}</div>
           <div class="diff-value-group">
             ${diffDisplay}
           </div>
         </div>
 
-        <!-- 4. Потери (или профит) в процентах: 100% * разницу / (среднее арифметическое суммарных объемов) -->
+        <!-- 4. Потери (или профит) в процентах -->
         <div class="diff-percent-row">
-          <span>Относительно объема:</span>
+          <span>${t('diffRelativeVolume')}</span>
           <strong>${formatPercent(result.percentDiff)}</strong>
         </div>
       </div>
@@ -293,7 +356,27 @@ function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, ra
 }
 
 /**
- * Обработчик нажатия на кнопку "Посчитать"
+ * Перерендеринг результатов предыдущего расчета при смене языка
+ */
+function rerenderLastCalculation() {
+  if (!lastCalculationData) return;
+
+  const { sellSymbol, buySymbol, qSell, qBuy, results, timeString } = lastCalculationData;
+  let allHtml = '';
+  for (const res of results) {
+    if (res.success) {
+      allHtml += renderProviderResult(res.providerId, sellSymbol, buySymbol, qSell, qBuy, res.rates);
+    } else {
+      allHtml += renderProviderError(res.providerId, res.error);
+    }
+  }
+
+  outputCardsContainerEl.innerHTML = allHtml;
+  outputStatusBadgeEl.textContent = t('outputUpdated', { time: timeString });
+}
+
+/**
+ * Обработчик нажатия на кнопку "Посчитать" / "Calculate"
  */
 async function handleCalculateClick() {
   const sellSymbol = selectCurrencySellEl.value;
@@ -303,19 +386,19 @@ async function handleCalculateClick() {
 
   // Валидация входных данных
   if (isNaN(qSell) || qSell < 0) {
-    alert('Пожалуйста, введите корректное положительное количество продаваемой валюты.');
+    alert(t('alertPositiveSell'));
     inputAmountSellEl.focus();
     return;
   }
   if (isNaN(qBuy) || qBuy < 0) {
-    alert('Пожалуйста, введите корректное положительное количество покупаемой валюты.');
+    alert(t('alertPositiveBuy'));
     inputAmountBuyEl.focus();
     return;
   }
 
   const activeProviderIds = getActiveProviders();
   if (activeProviderIds.length === 0) {
-    alert('Необходимо выбрать хотя бы одного провайдера котировок.');
+    alert(t('alertSelectProvider'));
     return;
   }
 
@@ -325,14 +408,14 @@ async function handleCalculateClick() {
   // "Также после нажать кнопка становится неактивной на 3 секнды со сменой надписи на "отправлено",
   // после чего снова становится активной с надпись "посчитать"."
   btnCalculateEl.disabled = true;
-  btnCalculateTextEl.textContent = 'Отправлено';
+  btnCalculateTextEl.textContent = t('btnSent');
   btnCalculateEl.classList.add('cooling');
   btnCooldownBarEl.style.width = '100%';
 
   // Таймер ровно на 3 секунды (3000 мс)
   setTimeout(() => {
     btnCalculateEl.disabled = false;
-    btnCalculateTextEl.textContent = 'Посчитать';
+    btnCalculateTextEl.textContent = t('btnCalculate');
     btnCalculateEl.classList.remove('cooling');
     btnCooldownBarEl.style.width = '0%';
   }, 3000);
@@ -341,7 +424,7 @@ async function handleCalculateClick() {
   outputCardsContainerEl.innerHTML = activeProviderIds
     .map(pId => renderProviderSkeleton(pId))
     .join('');
-  outputStatusBadgeEl.textContent = `Запрос к ${activeProviderIds.length} провайдер(ам)...`;
+  outputStatusBadgeEl.textContent = t('outputLoadingBadge', { count: activeProviderIds.length });
 
   const symbolsToFetch = Array.from(new Set([sellSymbol, buySymbol]));
 
@@ -357,24 +440,26 @@ async function handleCalculateClick() {
   });
 
   const results = await Promise.all(requests);
-
-  // Отрисовка финальных карточек
-  let allHtml = '';
-  for (const res of results) {
-    if (res.success) {
-      allHtml += renderProviderResult(res.providerId, sellSymbol, buySymbol, qSell, qBuy, res.rates);
-    } else {
-      allHtml += renderProviderError(res.providerId, res.error);
-    }
-  }
-
-  outputCardsContainerEl.innerHTML = allHtml;
   const now = new Date();
-  outputStatusBadgeEl.textContent = `Обновлено в ${now.toLocaleTimeString()}`;
+  const timeString = now.toLocaleTimeString();
+
+  // Сохраняем в кэш для мгновенной перерисовки при переключении языка
+  lastCalculationData = {
+    sellSymbol,
+    buySymbol,
+    qSell,
+    qBuy,
+    results,
+    timeString
+  };
+
+  rerenderLastCalculation();
 }
 
 // Инициализация при загрузке документа
 document.addEventListener('DOMContentLoaded', () => {
+  initTopControls();
   initProviders();
+  updateDomTranslations();
   btnCalculateEl.addEventListener('click', handleCalculateClick);
 });
