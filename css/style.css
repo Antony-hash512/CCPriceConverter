@@ -201,11 +201,6 @@ body {
   flex-shrink: 0;
 }
 
-.flag-icon {
-  font-size: 0.95rem;
-  line-height: 1;
-}
-
 /* Container */
 .app-container {
   max-width: 960px;
