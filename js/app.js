@@ -28,7 +28,9 @@ let lastCalculationData = null;
 // Локальное состояние API-ключей и настройки сохранения
 const STORAGE_KEYS_PREFIX = 'cc_api_key_';
 const STORAGE_DONT_SAVE_KEY = 'cc_dont_save_keys';
+const STORAGE_KEYLESS_PREFIX = 'cc_keyless_';
 const API_KEY_PROVIDERS = ['coinmarketcap', 'coingecko', 'coinpaprika'];
+const KEYLESS_PROVIDERS = ['coingecko', 'coinpaprika'];
 
 let isDontSaveEnabled = localStorage.getItem(STORAGE_DONT_SAVE_KEY) === 'true';
 
@@ -37,6 +39,17 @@ const apiKeysCache = {
   coingecko: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coingecko`) || '',
   coinpaprika: localStorage.getItem(`${STORAGE_KEYS_PREFIX}coinpaprika`) || ''
 };
+
+function isProviderKeyless(providerId) {
+  if (!KEYLESS_PROVIDERS.includes(providerId)) {
+    return providerId === 'defillama';
+  }
+  const saved = localStorage.getItem(`${STORAGE_KEYLESS_PREFIX}${providerId}`);
+  if (saved !== null) {
+    return saved === 'true';
+  }
+  return true; // по умолчанию включены
+}
 
 // Таймер для всплывающего уведомления (toast)
 let toastTimeout = null;
@@ -60,6 +73,13 @@ function updateKeyStatusIndicators() {
     const indicatorEl = document.getElementById(`key-status-${providerId}`);
     const inputEl = document.getElementById(`input-key-${providerId}`);
     if (!indicatorEl) return;
+
+    // Если для провайдера активен режим "Без ключа", дискета скрывается
+    if (KEYLESS_PROVIDERS.includes(providerId) && isProviderKeyless(providerId)) {
+      indicatorEl.classList.add('is-hidden');
+      indicatorEl.classList.remove('saved', 'not-saved');
+      return;
+    }
 
     const currentVal = inputEl ? inputEl.value.trim() : (apiKeysCache[providerId] || '');
     const hasSavedInStorage = Boolean(localStorage.getItem(`${STORAGE_KEYS_PREFIX}${providerId}`));
@@ -297,12 +317,68 @@ function initProviders() {
     });
   });
 
-  // Навешивание обработчиков на чекбоксы
+  // Навешивание обработчиков на чекбоксы провайдеров
   const checkboxes = document.querySelectorAll('input[type="checkbox"][data-provider]');
   checkboxes.forEach(cb => {
     cb.addEventListener('change', () => {
       updateProvidersUI();
     });
+  });
+
+  // Инициализация независимых чекбоксов "Без ключа" для CoinGecko и CoinPaprika
+  KEYLESS_PROVIDERS.forEach(providerId => {
+    const cbKeyless = document.getElementById(`checkbox-keyless-${providerId}`);
+    const wrapperEl = document.getElementById(`api-key-wrapper-${providerId}`);
+    const inputEl = document.getElementById(`input-key-${providerId}`);
+
+    if (cbKeyless) {
+      // Восстанавливаем сохраненное состояние (по умолчанию true)
+      const savedKeyless = isProviderKeyless(providerId);
+      cbKeyless.checked = savedKeyless;
+
+      const updateKeylessState = (isKeyless) => {
+        if (wrapperEl) {
+          if (isKeyless) {
+            wrapperEl.classList.add('keyless-mode');
+            if (inputEl) {
+              inputEl.disabled = true;
+              inputEl.title = t('keylessDisabledInputTooltip');
+            }
+          } else {
+            wrapperEl.classList.remove('keyless-mode');
+            if (inputEl) {
+              inputEl.disabled = false;
+              inputEl.title = '';
+            }
+          }
+        }
+        updateKeyStatusIndicators();
+      };
+
+      updateKeylessState(cbKeyless.checked);
+
+      cbKeyless.addEventListener('change', () => {
+        localStorage.setItem(`${STORAGE_KEYLESS_PREFIX}${providerId}`, cbKeyless.checked ? 'true' : 'false');
+        updateKeylessState(cbKeyless.checked);
+        if (!cbKeyless.checked && inputEl) {
+          inputEl.focus();
+        }
+      });
+
+      // При клике на затемнённый инпут в режиме "без ключа" - автоматически переключаем на ввод ключа
+      if (wrapperEl) {
+        wrapperEl.addEventListener('click', (e) => {
+          if (cbKeyless.checked) {
+            cbKeyless.checked = false;
+            localStorage.setItem(`${STORAGE_KEYLESS_PREFIX}${providerId}`, 'false');
+            updateKeylessState(false);
+            if (inputEl) {
+              inputEl.focus();
+            }
+          }
+        });
+      }
+    }
   });
 
   updateProvidersUI();
@@ -367,6 +443,10 @@ function getActiveProviders() {
  */
 function renderProviderSkeleton(providerId) {
   const config = PROVIDERS_CONFIG.find(p => p.id === providerId) || { name: providerId };
+  const isKeyless = isProviderKeyless(providerId);
+  const modeBadge = KEYLESS_PROVIDERS.includes(providerId)
+    ? `<span class="card-provider-mode-tag">${isKeyless ? t('modeKeylessBadge') : t('modeWithKeyBadge')}</span>`
+    : '';
 
   return `
     <div class="provider-card" id="card-${providerId}">
@@ -374,6 +454,7 @@ function renderProviderSkeleton(providerId) {
         <div class="card-provider-title">
           <span class="provider-icon ${config.iconClass}">${config.iconText}</span>
           <span>${config.name}</span>
+          ${modeBadge}
         </div>
         <span class="card-status-badge status-loading">
           <span class="pulse-dot"></span> ${t('statusLoading')}
@@ -410,8 +491,11 @@ function renderProviderSkeleton(providerId) {
 /**
  * Отрисовка ошибки для конкретного провайдера
  */
-function renderProviderError(providerId, errorMessage) {
+function renderProviderError(providerId, errorMessage, isKeyless = false) {
   const config = PROVIDERS_CONFIG.find(p => p.id === providerId) || { name: providerId };
+  const modeBadge = KEYLESS_PROVIDERS.includes(providerId)
+    ? `<span class="card-provider-mode-tag">${isKeyless ? t('modeKeylessBadge') : t('modeWithKeyBadge')}</span>`
+    : '';
 
   let hint = '';
   if (providerId === 'coinmarketcap' && (errorMessage.includes('прокси') || errorMessage.includes('proxy'))) {
@@ -426,6 +510,7 @@ function renderProviderError(providerId, errorMessage) {
         <div class="card-provider-title">
           <span class="provider-icon ${config.iconClass}">${config.iconText}</span>
           <span>${config.name}</span>
+          ${modeBadge}
         </div>
         <span class="card-status-badge status-error">${t('statusError')}</span>
       </div>
@@ -441,8 +526,11 @@ function renderProviderError(providerId, errorMessage) {
 /**
  * Отрисовка готовой карточки провайдера с результатами расчета
  */
-function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, rates) {
+function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, rates, isKeyless = false) {
   const config = PROVIDERS_CONFIG.find(p => p.id === providerId) || { name: providerId };
+  const modeBadge = KEYLESS_PROVIDERS.includes(providerId)
+    ? `<span class="card-provider-mode-tag">${isKeyless ? t('modeKeylessBadge') : t('modeWithKeyBadge')}</span>`
+    : '';
 
   const pSell = rates[sellSymbol];
   const pBuy = rates[buySymbol];
@@ -486,6 +574,7 @@ function renderProviderResult(providerId, sellSymbol, buySymbol, qSell, qBuy, ra
         <div class="card-provider-title">
           <span class="provider-icon ${config.iconClass}">${config.iconText}</span>
           <span>${config.name}</span>
+          ${modeBadge}
         </div>
         <span class="card-status-badge status-success">
           <span class="pulse-dot"></span> ${t('statusSuccess')}
@@ -549,9 +638,9 @@ function rerenderLastCalculation() {
   let allHtml = '';
   for (const res of results) {
     if (res.success) {
-      allHtml += renderProviderResult(res.providerId, sellSymbol, buySymbol, qSell, qBuy, res.rates);
+      allHtml += renderProviderResult(res.providerId, sellSymbol, buySymbol, qSell, qBuy, res.rates, res.isKeyless);
     } else {
-      allHtml += renderProviderError(res.providerId, res.error);
+      allHtml += renderProviderError(res.providerId, res.error, res.isKeyless);
     }
   }
 
@@ -612,14 +701,15 @@ async function handleCalculateClick() {
 
   const symbolsToFetch = Array.from(new Set([sellSymbol, buySymbol]));
 
-  // Параллельный опрос всех активных провайдеров
+  // Параллельный опрос всех активных провайдеров с учетом флага isKeyless
   const requests = activeProviderIds.map(async (providerId) => {
     const key = apiKeysCache[providerId] || '';
+    const isKeyless = isProviderKeyless(providerId);
     try {
-      const rates = await fetchProviderRates(providerId, symbolsToFetch, key);
-      return { providerId, success: true, rates };
+      const rates = await fetchProviderRates(providerId, symbolsToFetch, key, isKeyless);
+      return { providerId, success: true, rates, isKeyless };
     } catch (err) {
-      return { providerId, success: false, error: err.message };
+      return { providerId, success: false, error: err.message, isKeyless };
     }
   });
 

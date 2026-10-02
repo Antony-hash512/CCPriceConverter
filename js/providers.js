@@ -109,25 +109,75 @@ export async function fetchDefiLlamaRates(symbols) {
 
 /**
  * Получение котировок от CoinGecko
+ * @param {string[]} symbols - массив символов валют (BTC, ETH и т.д.)
+ * @param {string} apiKey - опциональный Demo или Pro API-ключ
+ * @param {boolean} isKeyless - флаг работы без ключа (публичный бесплатный тариф)
  */
-export async function fetchCoinGeckoRates(symbols, apiKey = '') {
+export async function fetchCoinGeckoRates(symbols, apiKey = '', isKeyless = false) {
   const ids = symbols.map(s => COINGECKO_IDS[s]).filter(Boolean);
   if (ids.length === 0) return {};
 
   const cleanKey = apiKey.trim();
-  let url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
-  const headers = {};
 
-  if (cleanKey) {
-    headers['x-cg-demo-api-key'] = cleanKey;
+  // 1. Отдельная логика для режима БЕЗ КЛЮЧА
+  if (isKeyless) {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('CoinGecko: превышен лимит публичных запросов (Rate Limit 429). Попробуйте позже или снимите отметку «Без ключа» и укажите API-ключ.');
+      }
+      throw new Error(`CoinGecko (без ключа) HTTP error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rates = {};
+    for (const sym of symbols) {
+      const id = COINGECKO_IDS[sym];
+      if (data[id] && typeof data[id].usd === 'number') {
+        rates[sym] = data[id].usd;
+      }
+    }
+    return rates;
   }
 
-  const response = await fetch(url, { headers });
+  // 2. Отдельная логика для режима С КЛЮЧОМ
+  if (!cleanKey) {
+    throw new Error('CoinGecko: отключен режим «Без ключа», но API-ключ не указан. Введите Demo/Pro ключ или отметьте «Без ключа».');
+  }
+
+  // Сначала пробуем стандартный эндпоинт с x-cg-demo-api-key
+  let url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
+  let headers = {
+    'x-cg-demo-api-key': cleanKey
+  };
+
+  let response = await fetch(url, { headers });
+
+  // Если возвращается 401/403, возможно у пользователя Pro-ключ (требует pro-api.coingecko.com и x-cg-pro-api-key)
+  if (response.status === 401 || response.status === 403) {
+    const proUrl = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
+    const proHeaders = {
+      'x-cg-pro-api-key': cleanKey
+    };
+    try {
+      const proResponse = await fetch(proUrl, { headers: proHeaders });
+      if (proResponse.ok) {
+        response = proResponse;
+      }
+    } catch {
+      // Оставляем исходный ответ
+    }
+  }
+
   if (!response.ok) {
     if (response.status === 429) {
-      throw new Error('CoinGecko: превышен лимит запросов (Rate Limit 429). Попробуйте позже или используйте API-ключ.');
+      throw new Error('CoinGecko: превышен лимит запросов по вашему API-ключу (Rate Limit 429).');
     }
-    throw new Error(`CoinGecko HTTP error: ${response.status}`);
+    if (response.status === 401 || response.status === 403) {
+      throw new Error('CoinGecko: неверный API-ключ (HTTP 401/403). Проверьте ключ или включите «Без ключа».');
+    }
+    throw new Error(`CoinGecko (с ключом) HTTP error: ${response.status}`);
   }
 
   const data = await response.json();
@@ -143,24 +193,75 @@ export async function fetchCoinGeckoRates(symbols, apiKey = '') {
 
 /**
  * Получение котировок от CoinPaprika
+ * @param {string[]} symbols - массив символов валют
+ * @param {string} apiKey - Pro API-ключ
+ * @param {boolean} isKeyless - флаг работы без ключа (публичный бесплатный тариф)
  */
-export async function fetchCoinPaprikaRates(symbols, apiKey = '') {
+export async function fetchCoinPaprikaRates(symbols, apiKey = '', isKeyless = false) {
   const cleanKey = apiKey.trim();
-  const headers = {};
-  if (cleanKey) {
-    headers['Authorization'] = cleanKey.startsWith('Bearer ') ? cleanKey : `Bearer ${cleanKey}`;
+
+  // 1. Отдельная логика для режима БЕЗ КЛЮЧА
+  if (isKeyless) {
+    const rates = {};
+    const promises = symbols.map(async (sym) => {
+      const paprikaId = COINPAPRIKA_IDS[sym];
+      if (!paprikaId) return;
+
+      const url = `https://api.coinpaprika.com/v1/tickers/${paprikaId}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('CoinPaprika: превышен лимит публичных запросов (Rate Limit 429). Попробуйте позже или используйте Pro API-ключ.');
+        }
+        throw new Error(`CoinPaprika (без ключа): ошибка загрузки ${sym} (HTTP ${response.status})`);
+      }
+      const data = await response.json();
+      if (data.quotes && data.quotes.USD && typeof data.quotes.USD.price === 'number') {
+        rates[sym] = data.quotes.USD.price;
+      }
+    });
+
+    await Promise.all(promises);
+    return rates;
   }
+
+  // 2. Отдельная логика для режима С КЛЮЧОМ
+  if (!cleanKey) {
+    throw new Error('CoinPaprika: отключен режим «Без ключа», но Pro API-ключ не указан. Введите ключ или отметьте «Без ключа».');
+  }
+
+  const rawKey = cleanKey.replace(/^Bearer\s+/i, '');
+  const headers = {
+    'Authorization': rawKey
+  };
 
   const rates = {};
   const promises = symbols.map(async (sym) => {
     const paprikaId = COINPAPRIKA_IDS[sym];
     if (!paprikaId) return;
 
-    const url = `https://api.coinpaprika.com/v1/tickers/${paprikaId}`;
-    const response = await fetch(url, { headers });
-    if (!response.ok) {
-      throw new Error(`CoinPaprika: ошибка загрузки ${sym} (HTTP ${response.status})`);
+    // Для платного Pro-тарифа CoinPaprika использует эндпоинт api-pro.coinpaprika.com
+    let url = `https://api-pro.coinpaprika.com/v1/tickers/${paprikaId}`;
+    let response;
+    try {
+      response = await fetch(url, { headers });
+    } catch {
+      url = `https://api.coinpaprika.com/v1/tickers/${paprikaId}`;
+      response = await fetch(url, { headers });
     }
+
+    if (!response.ok && response.status === 404) {
+      const fallbackUrl = `https://api.coinpaprika.com/v1/tickers/${paprikaId}`;
+      response = await fetch(fallbackUrl, { headers });
+    }
+
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('CoinPaprika: ошибка авторизации API-ключа (HTTP 401/403). Проверьте ключ или включите «Без ключа».');
+      }
+      throw new Error(`CoinPaprika (с ключом): ошибка загрузки ${sym} (HTTP ${response.status})`);
+    }
+
     const data = await response.json();
     if (data.quotes && data.quotes.USD && typeof data.quotes.USD.price === 'number') {
       rates[sym] = data.quotes.USD.price;
@@ -221,15 +322,19 @@ export async function fetchCoinMarketCapRates(symbols, apiKey = '') {
 
 /**
  * Единый диспетчер запросов по ID провайдера
+ * @param {string} providerId
+ * @param {string[]} symbols
+ * @param {string} apiKey
+ * @param {boolean} isKeyless
  */
-export async function fetchProviderRates(providerId, symbols, apiKey = '') {
+export async function fetchProviderRates(providerId, symbols, apiKey = '', isKeyless = false) {
   switch (providerId) {
     case 'defillama':
       return await fetchDefiLlamaRates(symbols);
     case 'coingecko':
-      return await fetchCoinGeckoRates(symbols, apiKey);
+      return await fetchCoinGeckoRates(symbols, apiKey, isKeyless);
     case 'coinpaprika':
-      return await fetchCoinPaprikaRates(symbols, apiKey);
+      return await fetchCoinPaprikaRates(symbols, apiKey, isKeyless);
     case 'coinmarketcap':
       return await fetchCoinMarketCapRates(symbols, apiKey);
     default:

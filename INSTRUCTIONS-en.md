@@ -113,7 +113,8 @@ The free keyless access is sufficient for this calculator.
    - **DefiLlama** is selected by default.
    - You can select anywhere from 1 to 4 providers.
    - If only one checkbox is active, it becomes locked from being unchecked (at least one source must always remain selected).
-   - When activating CoinMarketCap, CoinGecko, or CoinPaprika, an API key input field appears to the right.
+   - For **CoinGecko** and **CoinPaprika**, independent **"Without key"** checkboxes are provided (checked by default). When checked, requests query public free endpoints without authentication. When unchecked, the Demo/Pro API key input field is enabled to send authenticated requests.
+   - When activating CoinMarketCap, a required API key input field appears to the right.
    - An indicator appears to the left of the input: a floppy disk emoji (`💾`) when saved in `localStorage`, or a crossed-out floppy disk when non-saving mode is enabled.
    - If you uncheck a provider, the entered key is not erased; it remains saved in memory and cached in `localStorage` (unless non-saving mode is active).
 

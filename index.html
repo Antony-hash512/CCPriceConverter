@@ -214,7 +214,18 @@
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-coingecko">
-            <div class="api-key-wrapper">
+            <label class="keyless-option-wrap" for="checkbox-keyless-coingecko" title="Send requests without API key (public free tier)" data-i18n-title="keylessTooltip">
+              <span class="custom-checkbox custom-checkbox-sm">
+                <input type="checkbox" id="checkbox-keyless-coingecko" data-keyless-provider="coingecko" checked>
+                <span class="checkbox-visual">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </span>
+              <span class="keyless-text" data-i18n="keylessCheckbox">Without key</span>
+            </label>
+            <div class="api-key-wrapper keyless-mode" id="api-key-wrapper-coingecko">
               <span class="key-status-indicator is-hidden" id="key-status-coingecko" title="API key is saved in localStorage" data-i18n-title="keySavedDiskTooltip">
                 <span class="disk-emoji">💾</span>
                 <span class="strike-line" aria-hidden="true"></span>
@@ -223,10 +234,11 @@
                 type="password" 
                 id="input-key-coingecko" 
                 class="api-key-input" 
-                placeholder="Demo/Pro API key (optional)" 
+                placeholder="Demo/Pro API key" 
                 data-i18n-placeholder="geckoPlaceholder"
                 autocomplete="off"
                 spellcheck="false"
+                disabled
               >
               <button type="button" class="key-toggle-btn" data-target="input-key-coingecko" title="Show/hide key" data-i18n-title="keyToggleTitle">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -256,7 +268,18 @@
             </div>
           </label>
           <div class="api-key-container" id="api-key-box-coinpaprika">
-            <div class="api-key-wrapper">
+            <label class="keyless-option-wrap" for="checkbox-keyless-coinpaprika" title="Send requests without API key (public free tier)" data-i18n-title="keylessTooltip">
+              <span class="custom-checkbox custom-checkbox-sm">
+                <input type="checkbox" id="checkbox-keyless-coinpaprika" data-keyless-provider="coinpaprika" checked>
+                <span class="checkbox-visual">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </span>
+              <span class="keyless-text" data-i18n="keylessCheckbox">Without key</span>
+            </label>
+            <div class="api-key-wrapper keyless-mode" id="api-key-wrapper-coinpaprika">
               <span class="key-status-indicator is-hidden" id="key-status-coinpaprika" title="API key is saved in localStorage" data-i18n-title="keySavedDiskTooltip">
                 <span class="disk-emoji">💾</span>
                 <span class="strike-line" aria-hidden="true"></span>
@@ -265,10 +288,11 @@
                 type="password" 
                 id="input-key-coinpaprika" 
                 class="api-key-input" 
-                placeholder="Pro API key (optional)" 
+                placeholder="Pro API key" 
                 data-i18n-placeholder="paprikaPlaceholder"
                 autocomplete="off"
                 spellcheck="false"
+                disabled
               >
               <button type="button" class="key-toggle-btn" data-target="input-key-coinpaprika" title="Show/hide key" data-i18n-title="keyToggleTitle">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

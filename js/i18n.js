@@ -28,6 +28,11 @@ export const TRANSLATIONS = {
     paprikaPlaceholder: "Pro API key (optional)",
     keyToggleTitle: "Show/hide key",
     singleProviderTooltip: "Cannot uncheck the only active provider",
+    keylessCheckbox: "Without key",
+    keylessTooltip: "Send requests without API key (public free tier)",
+    keylessDisabledInputTooltip: "Keyless mode is active. Uncheck «Without key» to enter API key.",
+    modeKeylessBadge: "Keyless",
+    modeWithKeyBadge: "With Key",
 
     // Section 2: Input
     inputTitle: "Exchange Parameters (Input)",
@@ -127,6 +132,11 @@ export const TRANSLATIONS = {
     paprikaPlaceholder: "Pro API ключ (опционально)",
     keyToggleTitle: "Показать/скрыть ключ",
     singleProviderTooltip: "Нельзя отключить единственный активный провайдер",
+    keylessCheckbox: "Без ключа",
+    keylessTooltip: "Запрос без API-ключа (публичный бесплатный тариф)",
+    keylessDisabledInputTooltip: "Включен режим без ключа. Снимите отметку «Без ключа» для ввода API-ключа.",
+    modeKeylessBadge: "Без ключа",
+    modeWithKeyBadge: "С ключом",
 
     // Section 2: Input
     inputTitle: "Параметры обмена (Input)",
