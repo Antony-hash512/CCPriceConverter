@@ -60,11 +60,18 @@ To solve this seamlessly, **CCPriceConverter** includes a lightweight local serv
 
 Zero external packages are required! Both **Node.js** and **Python 3** implementations use native standard libraries.
 
-#### Option A: Run via Node.js (Recommended)
+#### Option 0: Run Without Any Server (Pure Browser / Localhost)
+No installation or server is required! Simply open `index.html` directly in your browser:
+- Double-click `index.html` in your file manager (opens via `file://`), OR
+- Serve with any static web server (e.g., `python3 -m http.server 8000` or VS Code Live Server).
+
+**DefiLlama**, **CoinGecko**, and **CoinPaprika** work 100% directly from the browser with live rates, currency conversions, theme/language toggles, and trade calculations.
+
+#### Option A: Run via Node.js (Recommended for CoinMarketCap)
 Requirements: Node.js 18+
 
 ```bash
-# Start the server (default port 3000)
+# Build standalone bundle and start proxy server (default port 3000)
 npm start
 # or:
 node server.js
@@ -184,11 +191,18 @@ API платформы **CoinMarketCap** сознательно блокируе
 
 Внешние библиотеки и пакеты **не требуются** — серверы на **Node.js** и **Python 3** написаны исключительно на встроенных стандартных библиотеках.
 
-#### Вариант А: Запуск через Node.js (Рекомендуемый)
+#### Вариант 0: Запуск без сервера (напрямую в браузере / со статического локалхоста)
+Никаких установок или запуска серверов не требуется! Достаточно просто открыть `index.html` в вашем браузере:
+- Двойным щелчком по файлу `index.html` (открывается по протоколу `file://`), ЛИБО
+- Запустив любой простой статический веб-сервер (например, `python3 -m http.server 8000` или Live Server).
+
+Провайдеры **DefiLlama**, **CoinGecko** и **CoinPaprika** работают на 100% напрямую из браузера: запрашивают актуальные котировки, рассчитывают объёмы, разницу и проценты, сохраняют ключи в `localStorage`, переключают языки и темы.
+
+#### Вариант А: Запуск через Node.js (Рекомендуемый для работы с CoinMarketCap)
 Требования: Node.js 18+
 
 ```bash
-# Запуск сервера на порту 3000
+# Автоматическая сборка бандла и запуск прокси-сервера (порт 3000)
 npm start
 # либо:
 node server.js

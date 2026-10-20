@@ -779,12 +779,21 @@ function initCmcHintToggle() {
   });
 }
 
-// Инициализация при загрузке документа
-document.addEventListener('DOMContentLoaded', () => {
+// Инициализация приложения
+function initApp() {
   initTopControls();
   initStorageControls();
   initProviders();
   initCmcHintToggle();
   updateDomTranslations();
-  btnCalculateEl.addEventListener('click', handleCalculateClick);
-});
+  const btn = document.getElementById('btn-calculate');
+  if (btn) {
+    btn.addEventListener('click', handleCalculateClick);
+  }
+}
+
+if (document.getElementById('btn-calculate')) {
+  initApp();
+} else {
+  document.addEventListener('DOMContentLoaded', initApp);
+}

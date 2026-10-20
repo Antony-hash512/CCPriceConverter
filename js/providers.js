@@ -273,7 +273,7 @@ export async function fetchCoinPaprikaRates(symbols, apiKey = '', isKeyless = fa
 }
 
 /**
- * Получение котировок от CoinMarketCap (через локальный прокси server.js)
+ * Получение котировок от CoinMarketCap (с поддержкой локального сервера, прямого запроса и CORS-прокси)
  */
 export async function fetchCoinMarketCapRates(symbols, apiKey = '') {
   const cleanKey = apiKey.trim();
@@ -282,42 +282,97 @@ export async function fetchCoinMarketCapRates(symbols, apiKey = '') {
   }
 
   const symList = symbols.join(',');
-  const proxyUrl = `/api/cmc/v1/cryptocurrency/quotes/latest?symbol=${symList}`;
+  const queryParamStr = `symbol=${encodeURIComponent(symList)}&CMC_PRO_API_KEY=${encodeURIComponent(cleanKey)}`;
+  const directApiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?${queryParamStr}`;
 
-  let response;
-  try {
-    response = await fetch(proxyUrl, {
+  // Стратегии запроса котировок (от локального прокси к публичным CORS-прокси и прямому запросу)
+  const candidateRequests = [];
+
+  // 1. Относительный путь к локальному серверу (если открыто через сервер CCPriceConverter по http/https)
+  if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+    candidateRequests.push(async () => {
+      return await fetch(`/api/cmc/v1/cryptocurrency/quotes/latest?symbol=${encodeURIComponent(symList)}`, {
+        headers: { 'X-CMC_PRO_API_KEY': cleanKey }
+      });
+    });
+  }
+
+  // 2. Локальный сервер по умолчанию на порту 3000 (если открыто через file:// или другой порт локалхоста)
+  candidateRequests.push(async () => {
+    return await fetch(`http://localhost:3000/api/cmc/v1/cryptocurrency/quotes/latest?symbol=${encodeURIComponent(symList)}`, {
+      headers: { 'X-CMC_PRO_API_KEY': cleanKey }
+    });
+  });
+
+  // 3. Прямой запрос к CMC (на случай наличия браузерного расширения CORS или режима разработки)
+  candidateRequests.push(async () => {
+    return await fetch(directApiUrl, {
       headers: {
-        'X-CMC_PRO_API_KEY': cleanKey
+        'X-CMC_PRO_API_KEY': cleanKey,
+        'Accept': 'application/json'
       }
     });
-  } catch (err) {
-    throw new Error('Не удалось связаться с локальным прокси для CoinMarketCap. Убедитесь, что сервер запущен: `npm start` или `node server.js`.');
-  }
+  });
 
-  if (!response.ok) {
-    let errMessage = `CoinMarketCap HTTP error ${response.status}`;
+  // 4. Публичный CORS-прокси corsproxy.io
+  candidateRequests.push(async () => {
+    return await fetch(`https://corsproxy.io/?url=${encodeURIComponent(directApiUrl)}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+  });
+
+  // 5. Публичный CORS-прокси allorigins.win
+  candidateRequests.push(async () => {
+    return await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(directApiUrl)}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+  });
+
+  let lastError = null;
+
+  for (const sendRequest of candidateRequests) {
     try {
-      const errJson = await response.json();
-      if (errJson.status && errJson.status.error_message) {
-        errMessage = `CoinMarketCap: ${errJson.status.error_message}`;
+      const response = await sendRequest();
+      if (!response || !response.ok) {
+        if (response) {
+          try {
+            const errJson = await response.json();
+            if (errJson.status && errJson.status.error_message) {
+              // Если CMC ответил с конкретным сообщением об ошибке (например, неверный ключ), сразу выбрасываем её
+              throw new Error(`CoinMarketCap: ${errJson.status.error_message}`);
+            }
+          } catch (e) {
+            if (e.message.startsWith('CoinMarketCap:')) throw e;
+          }
+        }
+        continue;
       }
-    } catch {
-      // Игнорируем ошибку парсинга тела
+
+      const json = await response.json();
+      if (json.status && json.status.error_code && json.status.error_code !== 0) {
+        throw new Error(`CoinMarketCap: ${json.status.error_message || 'API error'}`);
+      }
+
+      const rates = {};
+      if (json.data) {
+        for (const sym of symbols) {
+          if (json.data[sym] && json.data[sym].quote && json.data[sym].quote.USD) {
+            rates[sym] = json.data[sym].quote.USD.price;
+          }
+        }
+        if (Object.keys(rates).length > 0) {
+          return rates;
+        }
+      }
+    } catch (err) {
+      if (err.message.startsWith('CoinMarketCap:')) {
+        throw err;
+      }
+      lastError = err;
     }
-    throw new Error(errMessage);
   }
 
-  const json = await response.json();
-  const rates = {};
-  if (json.data) {
-    for (const sym of symbols) {
-      if (json.data[sym] && json.data[sym].quote && json.data[sym].quote.USD) {
-        rates[sym] = json.data[sym].quote.USD.price;
-      }
-    }
-  }
-  return rates;
+  throw new Error('CoinMarketCap API блокирует запросы из браузера по политике CORS. Для работы с CMC запустите локальный сервер (`npm start` или `python3 server.py`) либо используйте провайдеры DefiLlama, CoinGecko и CoinPaprika, которые работают напрямую без сервера.');
 }
 
 /**

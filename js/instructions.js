@@ -34,7 +34,7 @@ function setInstructionsLang(lang) {
     : 'User Guide & Documentation | CCPriceConverter';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initInstructions() {
   // 1. Инициализация темы
   initTheme();
   document.querySelectorAll('.theme-btn').forEach(btn => {
@@ -51,4 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   setInstructionsLang(currentLang);
-});
+}
+
+if (document.getElementById('top-controls-bar')) {
+  initInstructions();
+} else {
+  document.addEventListener('DOMContentLoaded', initInstructions);
+}

@@ -75,9 +75,9 @@ export const TRANSLATIONS = {
     statusError: "Request error",
     failedToFetch: "Failed to fetch rates:",
     missingRate: "Provider did not return a rate for {sym}.",
-    cmcProxyHint: "💡 To use CoinMarketCap, start the local server: `npm start` or `python3 server.py`",
+    cmcProxyHint: "💡 DefiLlama, CoinGecko, and CoinPaprika work 100% serverless. For CoinMarketCap, start `npm start` or use a CORS proxy.",
     cmcKeyRequired: "CoinMarketCap requires an API key. Please enter your key in the provider field.",
-    cmcProxyUnreachable: "Cannot reach the local proxy for CoinMarketCap. Make sure server is running (`npm start` or `node server.js`).",
+    cmcProxyUnreachable: "Cannot reach proxy for CoinMarketCap. DefiLlama, CoinGecko, and CoinPaprika work directly without a server.",
     coingeckoRateLimit: "CoinGecko: Rate Limit (429) reached. Please try again later or use an API key.",
 
     // Alerts
@@ -86,8 +86,8 @@ export const TRANSLATIONS = {
     alertSelectProvider: "At least one quote provider must be selected.",
 
     // CMC permanent proxy notice
-    cmcProxyNoticeHtml: 'Run local proxy for CoinMarketCap: <code>npm start</code> or <code>python3 server.py</code> | See <a href="instructions.html" class="hint-link">Instructions</a>',
-    cmcHintCollapsedPreview: "Local proxy setup (click to expand)",
+    cmcProxyNoticeHtml: 'CoinMarketCap proxy: <code>npm start</code> or <code>python3 server.py</code> | DefiLlama, CoinGecko & CoinPaprika work without a server',
+    cmcHintCollapsedPreview: "CoinMarketCap proxy notes (click to expand)",
     cmcCollapseTooltip: "Collapse hint",
     cmcExpandTooltip: "Expand hint",
 
@@ -179,9 +179,9 @@ export const TRANSLATIONS = {
     statusError: "Ошибка запроса",
     failedToFetch: "Не удалось получить котировки:",
     missingRate: "Провайдер не вернул котировку для {sym}.",
-    cmcProxyHint: "💡 Для работы CoinMarketCap запустите локальный сервер: `npm start` или `python3 server.py`",
+    cmcProxyHint: "💡 Провайдеры DefiLlama, CoinGecko и CoinPaprika работают без сервера. Для CoinMarketCap запустите `npm start` или используйте CORS-прокси.",
     cmcKeyRequired: "CoinMarketCap требует обязательный API-ключ. Пожалуйста, введите ключ в поле провайдера.",
-    cmcProxyUnreachable: "Не удалось связаться с локальным прокси для CoinMarketCap. Убедитесь, что сервер запущен: `npm start` или `node server.js`.",
+    cmcProxyUnreachable: "Не удалось связаться с прокси для CoinMarketCap. Провайдеры DefiLlama, CoinGecko и CoinPaprika работают напрямую без сервера.",
     coingeckoRateLimit: "CoinGecko: превышен лимит запросов (Rate Limit 429). Попробуйте позже или используйте API-ключ.",
 
     // Alerts
@@ -190,8 +190,8 @@ export const TRANSLATIONS = {
     alertSelectProvider: "Необходимо выбрать хотя бы одного провайдера котировок.",
 
     // CMC permanent proxy notice
-    cmcProxyNoticeHtml: 'Запуск локального прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | См. <a href="instructions.html" class="hint-link">Инструкция</a>',
-    cmcHintCollapsedPreview: "Настройка локального прокси (нажмите, чтобы развернуть)",
+    cmcProxyNoticeHtml: 'Прокси для CoinMarketCap: <code>npm start</code> или <code>python3 server.py</code> | DefiLlama, CoinGecko и CoinPaprika работают без сервера',
+    cmcHintCollapsedPreview: "Настройка прокси для CoinMarketCap (нажмите, чтобы развернуть)",
     cmcCollapseTooltip: "Свернуть подсказку",
     cmcExpandTooltip: "Развернуть подсказку",
 
