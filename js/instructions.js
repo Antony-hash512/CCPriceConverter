@@ -4,13 +4,43 @@
 
 import { initTheme, applyTheme } from './theme.js';
 
+function resolveInitialLanguage() {
+  if (typeof window !== 'undefined' && window.location && window.location.search) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlLang = (params.get('lang') || '').toLowerCase().trim();
+      if (urlLang === 'ru' || urlLang === 'en') {
+        localStorage.setItem(STORAGE_LANG_KEY, urlLang);
+        return urlLang;
+      }
+    } catch {}
+  }
+  const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_LANG_KEY) : null;
+  if (saved === 'ru' || saved === 'en') {
+    return saved;
+  }
+  return 'en';
+}
+
+function syncUrlLang(lang) {
+  if (typeof window !== 'undefined' && window.location && window.history && window.history.replaceState) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.history.replaceState(null, '', url.toString());
+    } catch {}
+  }
+}
+
 const STORAGE_LANG_KEY = 'cc_lang';
-let currentLang = localStorage.getItem(STORAGE_LANG_KEY) || 'en';
+let currentLang = resolveInitialLanguage();
 
 function setInstructionsLang(lang) {
+  if (lang !== 'en' && lang !== 'ru') return;
   currentLang = lang;
   localStorage.setItem(STORAGE_LANG_KEY, lang);
   document.documentElement.lang = lang;
+  syncUrlLang(lang);
 
   // Показываем нужный языковой блок и скрываем другой
   document.querySelectorAll('.lang-content').forEach(el => {

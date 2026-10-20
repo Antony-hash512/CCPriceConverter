@@ -122,11 +122,11 @@ function calculateExchange({ sellAmount, sellPrice, buyAmount, buyPrice }) {
 // ==========================================================================
 /**
  * CCPriceConverter - Модуль управления темой оформления (Theme Manager)
- * Режимы: 'light' (светлая), 'dark' (тёмная - по умолчанию), 'system' (системная)
+ * Режимы: 'light' (светлая), 'dark' (тёмная), 'system' (системная - по умолчанию)
  */
 
 const STORAGE_THEME_KEY = 'cc_theme';
-let currentThemeMode = localStorage.getItem(STORAGE_THEME_KEY) || 'dark'; // тёмная по умолчанию
+let currentThemeMode = localStorage.getItem(STORAGE_THEME_KEY) || 'system'; // системная по умолчанию
 
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -141,9 +141,11 @@ function getThemeMode() {
   return currentThemeMode;
 }
 
-function applyTheme(mode) {
+function applyTheme(mode, saveToStorage = true) {
   currentThemeMode = mode;
-  localStorage.setItem(STORAGE_THEME_KEY, mode);
+  if (saveToStorage) {
+    localStorage.setItem(STORAGE_THEME_KEY, mode);
+  }
 
   const effectiveTheme = resolveTheme(mode);
   document.documentElement.setAttribute('data-theme', effectiveTheme);
@@ -153,21 +155,26 @@ function applyTheme(mode) {
     const btnTheme = btn.getAttribute('data-theme');
     if (btnTheme === mode) {
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
     } else {
       btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
     }
   });
 }
 
 function initTheme() {
+  const savedMode = localStorage.getItem(STORAGE_THEME_KEY);
+  currentThemeMode = savedMode || 'system';
+
   // Слушатель системной смены темы
   mediaQuery.addEventListener('change', () => {
     if (currentThemeMode === 'system') {
-      applyTheme('system');
+      applyTheme('system', false);
     }
   });
 
-  applyTheme(currentThemeMode);
+  applyTheme(currentThemeMode, Boolean(savedMode));
 }
 
 // ==========================================================================
@@ -388,8 +395,36 @@ const TRANSLATIONS = {
   }
 };
 
+function resolveInitialLanguage() {
+  if (typeof window !== 'undefined' && window.location && window.location.search) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlLang = (params.get('lang') || '').toLowerCase().trim();
+      if (urlLang === 'ru' || urlLang === 'en') {
+        localStorage.setItem(STORAGE_LANG_KEY, urlLang);
+        return urlLang;
+      }
+    } catch {}
+  }
+  const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_LANG_KEY) : null;
+  if (saved === 'ru' || saved === 'en') {
+    return saved;
+  }
+  return 'en'; // English по умолчанию
+}
+
+function syncUrlLang(lang) {
+  if (typeof window !== 'undefined' && window.location && window.history && window.history.replaceState) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.history.replaceState(null, '', url.toString());
+    } catch {}
+  }
+}
+
 const STORAGE_LANG_KEY = 'cc_lang';
-let currentLang = localStorage.getItem(STORAGE_LANG_KEY) || 'en'; // English по умолчанию
+let currentLang = resolveInitialLanguage();
 
 const langChangeListeners = [];
 
@@ -402,6 +437,7 @@ function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem(STORAGE_LANG_KEY, lang);
   document.documentElement.lang = lang;
+  syncUrlLang(lang);
   updateDomTranslations();
   langChangeListeners.forEach(fn => fn(lang));
 }
@@ -426,6 +462,10 @@ function t(key, params = {}) {
  * Обновить все статические элементы с атрибутом [data-i18n]
  */
 function updateDomTranslations() {
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.lang = currentLang;
+  }
+
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     el.textContent = t(key);

@@ -40,9 +40,9 @@
           </button>
         </div>
 
-        <!-- Theme Switcher: Light, Dark, System -->
+        <!-- Theme Switcher: Light, Dark, System (Default: System) -->
         <div class="controls-group" id="theme-switch-group" role="group" aria-label="Theme selection">
-          <button type="button" class="ctrl-btn theme-btn" data-theme="light" id="btn-theme-light" title="Light theme">
+          <button type="button" class="ctrl-btn theme-btn" data-theme="light" id="btn-theme-light" title="Light theme" aria-pressed="false">
             <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -56,13 +56,13 @@
             </svg>
             <span class="theme-label">Light</span>
           </button>
-          <button type="button" class="ctrl-btn theme-btn active" data-theme="dark" id="btn-theme-dark" title="Dark theme">
+          <button type="button" class="ctrl-btn theme-btn" data-theme="dark" id="btn-theme-dark" title="Dark theme" aria-pressed="false">
             <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
             <span class="theme-label">Dark</span>
           </button>
-          <button type="button" class="ctrl-btn theme-btn" data-theme="system" id="btn-theme-system" title="System theme">
+          <button type="button" class="ctrl-btn theme-btn active" data-theme="system" id="btn-theme-system" title="System theme" aria-pressed="true">
             <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
               <line x1="8" y1="21" x2="16" y2="21"></line>

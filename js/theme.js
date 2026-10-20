@@ -1,10 +1,10 @@
 /**
  * CCPriceConverter - Модуль управления темой оформления (Theme Manager)
- * Режимы: 'light' (светлая), 'dark' (тёмная - по умолчанию), 'system' (системная)
+ * Режимы: 'light' (светлая), 'dark' (тёмная), 'system' (системная - по умолчанию)
  */
 
 const STORAGE_THEME_KEY = 'cc_theme';
-let currentThemeMode = localStorage.getItem(STORAGE_THEME_KEY) || 'dark'; // тёмная по умолчанию
+let currentThemeMode = localStorage.getItem(STORAGE_THEME_KEY) || 'system'; // системная по умолчанию
 
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -19,9 +19,11 @@ export function getThemeMode() {
   return currentThemeMode;
 }
 
-export function applyTheme(mode) {
+export function applyTheme(mode, saveToStorage = true) {
   currentThemeMode = mode;
-  localStorage.setItem(STORAGE_THEME_KEY, mode);
+  if (saveToStorage) {
+    localStorage.setItem(STORAGE_THEME_KEY, mode);
+  }
 
   const effectiveTheme = resolveTheme(mode);
   document.documentElement.setAttribute('data-theme', effectiveTheme);
@@ -31,19 +33,24 @@ export function applyTheme(mode) {
     const btnTheme = btn.getAttribute('data-theme');
     if (btnTheme === mode) {
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
     } else {
       btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
     }
   });
 }
 
 export function initTheme() {
+  const savedMode = localStorage.getItem(STORAGE_THEME_KEY);
+  currentThemeMode = savedMode || 'system';
+
   // Слушатель системной смены темы
   mediaQuery.addEventListener('change', () => {
     if (currentThemeMode === 'system') {
-      applyTheme('system');
+      applyTheme('system', false);
     }
   });
 
-  applyTheme(currentThemeMode);
+  applyTheme(currentThemeMode, Boolean(savedMode));
 }
